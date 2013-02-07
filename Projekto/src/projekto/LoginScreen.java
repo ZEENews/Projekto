@@ -18,7 +18,7 @@ import javax.swing.border.Border;
  
 public class LoginScreen extends JFrame implements ActionListener, KeyListener {
 
-    private JButton login, register;
+    private JButton login, register, cancel;
     private JTextField mail;
     private JPasswordField password;
     private Border standardBorder;
@@ -40,7 +40,7 @@ public class LoginScreen extends JFrame implements ActionListener, KeyListener {
         mail.addKeyListener(this);
         standardBorder = mail.getBorder();
         c.gridx = 1;
-        c.gridwidth = 2;
+        c.gridwidth = 3;
         cp.add(mail, c);
         JLabel passwordLabel = new JLabel("Passwort:");
         c.gridx = 0;
@@ -50,7 +50,7 @@ public class LoginScreen extends JFrame implements ActionListener, KeyListener {
         password = new JPasswordField(15);
         password.addKeyListener(this);
         c.gridx = 1;
-        c.gridwidth = 2;
+        c.gridwidth = 3;
         cp.add(password, c);
         login = new JButton("Login");
         login.addActionListener(this);
@@ -61,8 +61,12 @@ public class LoginScreen extends JFrame implements ActionListener, KeyListener {
         register = new JButton("Register");
         register.addActionListener(this);
         c.gridx = 2;
-        c.insets = new Insets(5, 1, 5, 4);
         cp.add(register, c);
+        cancel = new JButton("Cancel");
+        cancel.addActionListener(this);
+        c.gridx = 3;
+        c.insets = new Insets(5, 5, 5, 4);
+        cp.add(cancel, c);
         pack();
         setVisible(true);
     }
@@ -105,7 +109,11 @@ public class LoginScreen extends JFrame implements ActionListener, KeyListener {
     public void actionPerformed(ActionEvent e) {
         if (e.getSource().equals(login)) {
             login();
-        } else {
+        }
+        else if (e.getSource().equals(cancel)) {
+            System.exit(0);
+        }
+        else {
             dispose();
             new CreateAccount();
         }
