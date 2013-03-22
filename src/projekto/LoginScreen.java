@@ -75,8 +75,20 @@ public class LoginScreen extends JFrame implements ActionListener, KeyListener {
      * *
      */
     public boolean authenticate(String user, String password) {
-        return true;
-    }
+        DBConnect db = new DBConnect();
+        String result;
+        
+        result = db.loginCheck(user);  
+        if(result.equals(password)){
+            JOptionPane.showMessageDialog(null, "Login successfully.", "Login", JOptionPane.INFORMATION_MESSAGE);
+            dispose();
+            return true;
+        }else{
+            JOptionPane.showMessageDialog(null, "Login failed!", "Login", JOptionPane.INFORMATION_MESSAGE);
+            dispose();
+            return false;
+        }
+    }  
 
     /**
      * *
