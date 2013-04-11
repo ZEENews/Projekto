@@ -17,10 +17,10 @@ import javax.swing.border.Border;
 public class CreateAccount extends JFrame implements ActionListener {
 
     private JButton register, cancel;
-    private JTextField vorname, nachname, strasse,hausnummer, plz, ort;
-    private InfoTextField mail, geburtsdatum;
+    private JTextField mail, geburtsdatum, vorname, nachname, strasse,hausnummer, plz, ort;
     private JPasswordField password, confirmPw;
     private Border standardBorder;
+    private Color standardColor;
 
     public CreateAccount() {
         super("Create Account");
@@ -46,6 +46,7 @@ public class CreateAccount extends JFrame implements ActionListener {
         
         vorname = new JTextField(15);
         standardBorder = vorname.getBorder();
+        standardColor = vorname.getBackground();
         c.gridx = 1;
         c.gridwidth = 2;
         reg.add(vorname, c);
@@ -67,7 +68,7 @@ public class CreateAccount extends JFrame implements ActionListener {
         c.gridy++;
         reg.add(geburtsdatumLabel, c);
         
-        geburtsdatum = new InfoTextField("DD.MM.YYYY", 15);
+        geburtsdatum = new JTextField(15);
         c.gridx = 1;
         c.gridwidth = 2;
         reg.add(geburtsdatum, c);
@@ -89,7 +90,7 @@ public class CreateAccount extends JFrame implements ActionListener {
         c.gridy++;
         reg.add(hausnummerLabel, c);
         
-        hausnummer = new JTextField(15);
+        hausnummer = new JTextField( 15);
         c.gridx = 1;
         c.gridwidth = 2;
         reg.add(hausnummer, c);
@@ -122,7 +123,7 @@ public class CreateAccount extends JFrame implements ActionListener {
         c.gridy++;
         reg.add(emailLabel, c);
         
-        mail = new InfoTextField("beispiel@domain.de", 15);
+        mail = new JTextField(15);
         c.gridx = 1;
         c.gridwidth = 2;
         reg.add(mail, c);
@@ -179,55 +180,77 @@ public class CreateAccount extends JFrame implements ActionListener {
             String stadt = ort.getText();
             String pw = new String(password.getPassword());
             String pw2 = new String(confirmPw.getPassword());
-            mail.setBorder(standardBorder);
-            vorname.setBorder(standardBorder);
-            nachname.setBorder(standardBorder);
-            geburtsdatum.setBorder(standardBorder);
-            strasse.setBorder(standardBorder);
-            hausnummer.setBorder(standardBorder);
-            plz.setBorder(standardBorder);
-            ort.setBorder(standardBorder);
-            password.setBorder(standardBorder);
-            confirmPw.setBorder(standardBorder);
+//            mail.setBorder(standardBorder);
+//            vorname.setBorder(standardBorder);
+//            nachname.setBorder(standardBorder);
+//            geburtsdatum.setBorder(standardBorder);
+//            strasse.setBorder(standardBorder);
+//            hausnummer.setBorder(standardBorder);
+//            plz.setBorder(standardBorder);
+//            ort.setBorder(standardBorder);
+//            password.setBorder(standardBorder);
+//            confirmPw.setBorder(standardBorder);
+            mail.setBackground(standardColor);
+            vorname.setBackground(standardColor);
+            nachname.setBackground(standardColor);
+            geburtsdatum.setBackground(standardColor);
+            strasse.setBackground(standardColor);
+            hausnummer.setBackground(standardColor);
+            plz.setBackground(standardColor);
+            ort.setBackground(standardColor);
+            password.setBackground(standardColor);
+            confirmPw.setBackground(standardColor);
+            
             boolean valid = true;
+            
             if (email.equals("")) {
                 valid = false;
-                mail.setBorder(BorderFactory.createLineBorder(Color.RED, 2));
+                //mail.setBorder(BorderFactory.createLineBorder(Color.RED, 2));
+                mail.setBackground(new Color(255, 175, 175));
             }
             if (vname.equals("")) {
                 valid = false;
-                vorname.setBorder(BorderFactory.createLineBorder(Color.RED, 2));
+                //vorname.setBorder(BorderFactory.createLineBorder(Color.RED, 2));
+                vorname.setBackground(new Color(255, 175, 175));
             }
             if (nname.equals("")) {
                 valid = false;
-                nachname.setBorder(BorderFactory.createLineBorder(Color.RED, 2));
+                //nachname.setBorder(BorderFactory.createLineBorder(Color.RED, 2));
+                nachname.setBackground(new Color(255, 175, 175));
             }
             if (geb.equals("")||!geb.matches("[0-9]{2}.[0-9]{2}.[0-9]{4}")) {
                 valid = false;
-                geburtsdatum.setBorder(BorderFactory.createLineBorder(Color.RED, 2));
+                //geburtsdatum.setBorder(BorderFactory.createLineBorder(Color.RED, 2));
+                geburtsdatum.setBackground(new Color(255, 175, 175));
             }
             if (str.equals("")) {
                 valid = false;
-                strasse.setBorder(BorderFactory.createLineBorder(Color.RED, 2));
+                //strasse.setBorder(BorderFactory.createLineBorder(Color.RED, 2));
+                strasse.setBackground(new Color(255, 175, 175));
             }
             if (hnr.equals("")||!hnr.matches("[0-9]+[a-z]?")) {
                 valid = false;
-                hausnummer.setBorder(BorderFactory.createLineBorder(Color.RED, 2));
+                //hausnummer.setBorder(BorderFactory.createLineBorder(Color.RED, 2));
+                hausnummer.setBackground(new Color(255, 175, 175));
             }
             if (postleitzahl.equals("")||!postleitzahl.matches("[0-9]{5}")) {
                 valid = false;
-                plz.setBorder(BorderFactory.createLineBorder(Color.RED, 2));
+                //plz.setBorder(BorderFactory.createLineBorder(Color.RED, 2));
+                plz.setBackground(new Color(255, 175, 175));
             }
             if (stadt.equals("")) {
                 valid = false;
-                ort.setBorder(BorderFactory.createLineBorder(Color.RED, 2));
+                //ort.setBorder(BorderFactory.createLineBorder(Color.RED, 2));
+                ort.setBackground(new Color(255, 175, 175));
             }
             if (pw.equals("")) {
                 valid = false;
-                password.setBorder(BorderFactory.createLineBorder(Color.RED, 2));
+                //password.setBorder(BorderFactory.createLineBorder(Color.RED, 2));
+                password.setBackground(new Color(255, 175, 175));
             }
             if (pw2.equals("")) {
-                confirmPw.setBorder(BorderFactory.createLineBorder(Color.RED, 2));
+                //confirmPw.setBorder(BorderFactory.createLineBorder(Color.RED, 2));
+                confirmPw.setBackground(new Color(255, 175, 175));
             }
             if (valid) {
                 if (false) {
