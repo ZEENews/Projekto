@@ -202,7 +202,7 @@ public class CreateAccount extends JFrame implements ActionListener {
                 valid = false;
                 nachname.setBorder(BorderFactory.createLineBorder(Color.RED, 2));
             }
-            if (geb.equals("")) {
+            if (geb.equals("")||!geb.matches("[0-9]{2}.[0-9]{2}.[0-9]{4}")) {
                 valid = false;
                 geburtsdatum.setBorder(BorderFactory.createLineBorder(Color.RED, 2));
             }
