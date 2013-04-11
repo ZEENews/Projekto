@@ -209,11 +209,11 @@ public class CreateAccount extends JFrame implements ActionListener {
                 valid = false;
                 strasse.setBorder(BorderFactory.createLineBorder(Color.RED, 2));
             }
-            if (hnr.equals("")) {
+            if (hnr.equals("")||!hnr.matches("[0-9]+[a-z]?")) {
                 valid = false;
                 hausnummer.setBorder(BorderFactory.createLineBorder(Color.RED, 2));
             }
-            if (postleitzahl.equals("")) {
+            if (postleitzahl.equals("")||!postleitzahl.matches("[0-9]{5}")) {
                 valid = false;
                 plz.setBorder(BorderFactory.createLineBorder(Color.RED, 2));
             }
