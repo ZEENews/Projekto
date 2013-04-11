@@ -69,6 +69,7 @@ public class CreateAccount extends JFrame implements ActionListener {
         reg.add(geburtsdatumLabel, c);
         
         geburtsdatum = new JTextField(15);
+        geburtsdatum.setToolTipText("DD.MM.YYYY");
         c.gridx = 1;
         c.gridwidth = 2;
         reg.add(geburtsdatum, c);
@@ -124,6 +125,7 @@ public class CreateAccount extends JFrame implements ActionListener {
         reg.add(emailLabel, c);
         
         mail = new JTextField(15);
+        mail.setToolTipText("beispiel@domain.de");
         c.gridx = 1;
         c.gridwidth = 2;
         reg.add(mail, c);
@@ -135,6 +137,7 @@ public class CreateAccount extends JFrame implements ActionListener {
         reg.add(passwordLabel, c);
         
         password = new JPasswordField(15);
+        password.setToolTipText("Mindestens 6 Zeichen!");
         c.gridx = 1;
         c.gridwidth = 2;
         reg.add(password, c);
@@ -208,12 +211,12 @@ public class CreateAccount extends JFrame implements ActionListener {
                 //mail.setBorder(BorderFactory.createLineBorder(Color.RED, 2));
                 mail.setBackground(new Color(255, 175, 175));
             }
-            if (vname.equals("")) {
+            if (vname.equals("")||!vname.matches("[a-zA-Z]+")) {
                 valid = false;
                 //vorname.setBorder(BorderFactory.createLineBorder(Color.RED, 2));
                 vorname.setBackground(new Color(255, 175, 175));
             }
-            if (nname.equals("")) {
+            if (nname.equals("")||!nname.matches("[a-zA-Z]+")) {
                 valid = false;
                 //nachname.setBorder(BorderFactory.createLineBorder(Color.RED, 2));
                 nachname.setBackground(new Color(255, 175, 175));
@@ -223,7 +226,7 @@ public class CreateAccount extends JFrame implements ActionListener {
                 //geburtsdatum.setBorder(BorderFactory.createLineBorder(Color.RED, 2));
                 geburtsdatum.setBackground(new Color(255, 175, 175));
             }
-            if (str.equals("")) {
+            if (str.equals("")||!str.matches("[a-zA-Z]+-?([a-zA-Z]+)?-?([a-zA-Z]+)?")) {
                 valid = false;
                 //strasse.setBorder(BorderFactory.createLineBorder(Color.RED, 2));
                 strasse.setBackground(new Color(255, 175, 175));
@@ -238,7 +241,7 @@ public class CreateAccount extends JFrame implements ActionListener {
                 //plz.setBorder(BorderFactory.createLineBorder(Color.RED, 2));
                 plz.setBackground(new Color(255, 175, 175));
             }
-            if (stadt.equals("")) {
+            if (stadt.equals("")||!stadt.matches("[a-zA-Z]+")) {
                 valid = false;
                 //ort.setBorder(BorderFactory.createLineBorder(Color.RED, 2));
                 ort.setBackground(new Color(255, 175, 175));
