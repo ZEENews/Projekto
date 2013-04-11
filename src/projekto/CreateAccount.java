@@ -255,6 +255,10 @@ public class CreateAccount extends JFrame implements ActionListener {
                 //confirmPw.setBorder(BorderFactory.createLineBorder(Color.RED, 2));
                 confirmPw.setBackground(new Color(255, 175, 175));
             }
+            if (pw.length()<6){
+                password.setBackground(new Color(255, 175, 175));
+                JOptionPane.showMessageDialog(null, "Password too short!", "Invalid Password", JOptionPane.ERROR_MESSAGE);
+            }
             if (valid) {
                 if (false) {
                     valid = false;
