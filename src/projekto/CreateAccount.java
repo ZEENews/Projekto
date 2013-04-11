@@ -17,7 +17,8 @@ import javax.swing.border.Border;
 public class CreateAccount extends JFrame implements ActionListener {
 
     private JButton register, cancel;
-    private JTextField mail, vorname, nachname,geburtsdatum, strasse,hausnummer, plz, ort;
+    private JTextField vorname, nachname, strasse,hausnummer, plz, ort;
+    private InfoTextField mail, geburtsdatum;
     private JPasswordField password, confirmPw;
     private Border standardBorder;
 
@@ -66,7 +67,7 @@ public class CreateAccount extends JFrame implements ActionListener {
         c.gridy++;
         reg.add(geburtsdatumLabel, c);
         
-        geburtsdatum = new JTextField(15);
+        geburtsdatum = new InfoTextField("DD.MM.YYYY", 15);
         c.gridx = 1;
         c.gridwidth = 2;
         reg.add(geburtsdatum, c);
@@ -121,7 +122,7 @@ public class CreateAccount extends JFrame implements ActionListener {
         c.gridy++;
         reg.add(emailLabel, c);
         
-        mail = new JTextField(15);
+        mail = new InfoTextField("beispiel@domain.de", 15);
         c.gridx = 1;
         c.gridwidth = 2;
         reg.add(mail, c);
