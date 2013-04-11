@@ -218,7 +218,7 @@ public class CreateAccount extends JFrame implements ActionListener {
                 //nachname.setBorder(BorderFactory.createLineBorder(Color.RED, 2));
                 nachname.setBackground(new Color(255, 175, 175));
             }
-            if (geb.equals("")||!geb.matches("[0-9]{2}.[0-9]{2}.[0-9]{4}")) {
+            if (geb.equals("")||!geb.matches("[0-3][0-9].[0-1][0-9].[1-2][0-9]{3}")) {
                 valid = false;
                 //geburtsdatum.setBorder(BorderFactory.createLineBorder(Color.RED, 2));
                 geburtsdatum.setBackground(new Color(255, 175, 175));
