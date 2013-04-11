@@ -4,10 +4,6 @@
  */
 package projekto;
 
-/**
- *
- * @author Julia
- */
 import java.awt.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
@@ -226,7 +222,7 @@ public class CreateAccount extends JFrame implements ActionListener {
                 //geburtsdatum.setBorder(BorderFactory.createLineBorder(Color.RED, 2));
                 geburtsdatum.setBackground(new Color(255, 175, 175));
             }
-            if (str.equals("")||!str.matches("[a-zA-Z]+-?([a-zA-Z]+)?-?([a-zA-Z]+)?")) {
+            if (str.equals("")||!str.matches("[a-zA-Zßäüö-]+ ?([a-zA-Zßäüö-]+)? ?([a-zA-Zßäüö-]+)?")) {
                 valid = false;
                 //strasse.setBorder(BorderFactory.createLineBorder(Color.RED, 2));
                 strasse.setBackground(new Color(255, 175, 175));
@@ -255,9 +251,11 @@ public class CreateAccount extends JFrame implements ActionListener {
                 //confirmPw.setBorder(BorderFactory.createLineBorder(Color.RED, 2));
                 confirmPw.setBackground(new Color(255, 175, 175));
             }
-            if (pw.length()<6){
+            if (pw.length()<6 && valid){
                 password.setBackground(new Color(255, 175, 175));
+                confirmPw.setBackground(new Color(255, 175, 175));
                 JOptionPane.showMessageDialog(null, "Password too short!", "Invalid Password", JOptionPane.ERROR_MESSAGE);
+                valid = false;
             }
             if (valid) {
                 if (false) {
