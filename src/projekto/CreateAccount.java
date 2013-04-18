@@ -16,7 +16,8 @@ public class CreateAccount extends JFrame implements ActionListener {
     private JTextField mail, geburtsdatum, vorname, nachname, strasse,hausnummer, plz, ort;
     private JPasswordField password, confirmPw;
     private Color standardColor;
-
+    private Date date = new Date();
+    
     public CreateAccount() {
         super("Create Account");
         setDefaultCloseOperation(EXIT_ON_CLOSE);
@@ -186,6 +187,7 @@ public class CreateAccount extends JFrame implements ActionListener {
             password.setBackground(standardColor);
             confirmPw.setBackground(standardColor);
             
+            
             boolean valid = true;
             
             if (email.equals("")) {
@@ -201,7 +203,7 @@ public class CreateAccount extends JFrame implements ActionListener {
                 valid = false;
                 nachname.setBackground(new Color(255, 175, 175));
             }
-            if (geb.equals("")||!Date.isDateCorrect(geb)||!geb.matches("[0-9]{1,2}.[0-9]{1,2}.[0-9]{2,4}")) {
+            if (geb.equals("")||!date.isDateCorrect(geb)||!geb.matches("[0-9]{1,2}.[0-9]{1,2}.[0-9]{2,4}")) {
                 valid = false;
                 geburtsdatum.setBackground(new Color(255, 175, 175));
             }
