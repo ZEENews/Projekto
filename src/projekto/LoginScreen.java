@@ -81,7 +81,6 @@ public class LoginScreen extends JFrame implements ActionListener, KeyListener {
             dispose();
             return true;
         }else{
-            JOptionPane.showMessageDialog(null, "Login failed!", "Login", JOptionPane.INFORMATION_MESSAGE);
             dispose();
             return false;
         }

@@ -7,10 +7,6 @@ package projekto;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
 
-/**
- *
- * @author gneussto
- */
 public class Date {
 
     public boolean isDateCorrect(String date) {

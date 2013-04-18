@@ -187,10 +187,11 @@ public class CreateAccount extends JFrame implements ActionListener {
             password.setBackground(standardColor);
             confirmPw.setBackground(standardColor);
             
+            DBConnect db = new DBConnect();
             
             boolean valid = true;
             
-            if (email.equals("")) {
+            if (email.equals("")||db.emailCheck(email)) {
                 valid = false;
                
                 mail.setBackground(new Color(255, 175, 175));
@@ -246,7 +247,6 @@ public class CreateAccount extends JFrame implements ActionListener {
                     JOptionPane.showMessageDialog(null, "Password does not match.", "Invalid Password", JOptionPane.ERROR_MESSAGE);
                 }
                 if (valid) {
-                    DBConnect db = new DBConnect();
                     db.createUser(email, vname, nname, geb, str, hnr, stadt, postleitzahl, pw);  //Diese Zeile ist neu
                     //DBConnector.getInstance().createUser(name, pw);
                     JOptionPane.showMessageDialog(null, "Account successfully created.", "Account created", JOptionPane.INFORMATION_MESSAGE);
