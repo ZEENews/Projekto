@@ -201,7 +201,7 @@ public class CreateAccount extends JFrame implements ActionListener {
                 valid = false;
                 nachname.setBackground(new Color(255, 175, 175));
             }
-            if (geb.equals("")||!geb.matches("[0-3][0-9].[0-1][0-9].[1-2][0-9]{3}")) {
+            if (geb.equals("")||!Date.isDateCorrect(geb)||!geb.matches("[0-9]{1,2}.[0-9]{1,2}.[0-9]{2,4}")) {
                 valid = false;
                 geburtsdatum.setBackground(new Color(255, 175, 175));
             }
