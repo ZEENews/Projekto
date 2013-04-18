@@ -207,12 +207,12 @@ public class CreateAccount extends JFrame implements ActionListener {
                 //mail.setBorder(BorderFactory.createLineBorder(Color.RED, 2));
                 mail.setBackground(new Color(255, 175, 175));
             }
-            if (vname.equals("")||!vname.matches("[a-zA-Z]+")) {
+            if (vname.equals("")||!vname.matches("[a-zA-Zßäüö]+")) {
                 valid = false;
                 //vorname.setBorder(BorderFactory.createLineBorder(Color.RED, 2));
                 vorname.setBackground(new Color(255, 175, 175));
             }
-            if (nname.equals("")||!nname.matches("[a-zA-Z]+")) {
+            if (nname.equals("")||!nname.matches("[a-zA-Zßäüö]+")) {
                 valid = false;
                 //nachname.setBorder(BorderFactory.createLineBorder(Color.RED, 2));
                 nachname.setBackground(new Color(255, 175, 175));
@@ -237,7 +237,7 @@ public class CreateAccount extends JFrame implements ActionListener {
                 //plz.setBorder(BorderFactory.createLineBorder(Color.RED, 2));
                 plz.setBackground(new Color(255, 175, 175));
             }
-            if (stadt.equals("")||!stadt.matches("[a-zA-Z]+")) {
+            if (stadt.equals("")||!stadt.matches("[a-zA-Zßäüö]+")) {
                 valid = false;
                 //ort.setBorder(BorderFactory.createLineBorder(Color.RED, 2));
                 ort.setBackground(new Color(255, 175, 175));
