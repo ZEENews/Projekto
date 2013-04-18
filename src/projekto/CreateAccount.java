@@ -117,7 +117,7 @@ public class CreateAccount extends JFrame implements ActionListener {
         reg.add(emailLabel, c);
         
         mail = new JTextField(15);
-        mail.setToolTipText("beispiel@domain.de");
+        mail.setToolTipText("<html>beispiel@domain.de<br>Bitte keine Umlaute benutzen!</html>");
         c.gridx = 1;
         c.gridwidth = 2;
         reg.add(mail, c);
