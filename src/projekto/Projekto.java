@@ -4,10 +4,6 @@
  */
 package projekto;
 
-/**
- *
- * @author Julia
- */
 public class Projekto {
 
     /**

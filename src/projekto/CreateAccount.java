@@ -8,14 +8,13 @@ import java.awt.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import javax.swing.*;
-import javax.swing.border.Border;
+
 
 public class CreateAccount extends JFrame implements ActionListener {
 
     private JButton register, cancel;
     private JTextField mail, geburtsdatum, vorname, nachname, strasse,hausnummer, plz, ort;
     private JPasswordField password, confirmPw;
-    private Border standardBorder;
     private Color standardColor;
 
     public CreateAccount() {
@@ -24,8 +23,6 @@ public class CreateAccount extends JFrame implements ActionListener {
         setResizable(false);
         
         Container cp = getContentPane();
-        //cp.setLayout(new GridBagLayout());
-        
         GridBagConstraints c = new GridBagConstraints();
         c.gridx = 0;
         c.gridy = 0;
@@ -41,7 +38,6 @@ public class CreateAccount extends JFrame implements ActionListener {
         reg.add(vornameLabel, c);
         
         vorname = new JTextField(15);
-        standardBorder = vorname.getBorder();
         standardColor = vorname.getBackground();
         c.gridx = 1;
         c.gridwidth = 2;
@@ -179,16 +175,6 @@ public class CreateAccount extends JFrame implements ActionListener {
             String stadt = ort.getText();
             String pw = new String(password.getPassword());
             String pw2 = new String(confirmPw.getPassword());
-//            mail.setBorder(standardBorder);
-//            vorname.setBorder(standardBorder);
-//            nachname.setBorder(standardBorder);
-//            geburtsdatum.setBorder(standardBorder);
-//            strasse.setBorder(standardBorder);
-//            hausnummer.setBorder(standardBorder);
-//            plz.setBorder(standardBorder);
-//            ort.setBorder(standardBorder);
-//            password.setBorder(standardBorder);
-//            confirmPw.setBorder(standardBorder);
             mail.setBackground(standardColor);
             vorname.setBackground(standardColor);
             nachname.setBackground(standardColor);
@@ -204,51 +190,42 @@ public class CreateAccount extends JFrame implements ActionListener {
             
             if (email.equals("")) {
                 valid = false;
-                //mail.setBorder(BorderFactory.createLineBorder(Color.RED, 2));
+               
                 mail.setBackground(new Color(255, 175, 175));
             }
             if (vname.equals("")||!vname.matches("[a-zA-Zßäüö]+")) {
                 valid = false;
-                //vorname.setBorder(BorderFactory.createLineBorder(Color.RED, 2));
                 vorname.setBackground(new Color(255, 175, 175));
             }
             if (nname.equals("")||!nname.matches("[a-zA-Zßäüö]+")) {
                 valid = false;
-                //nachname.setBorder(BorderFactory.createLineBorder(Color.RED, 2));
                 nachname.setBackground(new Color(255, 175, 175));
             }
             if (geb.equals("")||!geb.matches("[0-3][0-9].[0-1][0-9].[1-2][0-9]{3}")) {
                 valid = false;
-                //geburtsdatum.setBorder(BorderFactory.createLineBorder(Color.RED, 2));
                 geburtsdatum.setBackground(new Color(255, 175, 175));
             }
             if (str.equals("")||!str.matches("[a-zA-Zßäüö-]+ ?([a-zA-Zßäüö-]+)? ?([a-zA-Zßäüö-]+)?")) {
                 valid = false;
-                //strasse.setBorder(BorderFactory.createLineBorder(Color.RED, 2));
                 strasse.setBackground(new Color(255, 175, 175));
             }
             if (hnr.equals("")||!hnr.matches("[0-9]+[a-z]?")) {
-                valid = false;
-                //hausnummer.setBorder(BorderFactory.createLineBorder(Color.RED, 2));
+                valid = false;    
                 hausnummer.setBackground(new Color(255, 175, 175));
             }
             if (postleitzahl.equals("")||!postleitzahl.matches("[0-9]{5}")) {
                 valid = false;
-                //plz.setBorder(BorderFactory.createLineBorder(Color.RED, 2));
                 plz.setBackground(new Color(255, 175, 175));
             }
             if (stadt.equals("")||!stadt.matches("[a-zA-Zßäüö]+")) {
                 valid = false;
-                //ort.setBorder(BorderFactory.createLineBorder(Color.RED, 2));
                 ort.setBackground(new Color(255, 175, 175));
             }
             if (pw.equals("")) {
                 valid = false;
-                //password.setBorder(BorderFactory.createLineBorder(Color.RED, 2));
                 password.setBackground(new Color(255, 175, 175));
             }
-            if (pw2.equals("")) {
-                //confirmPw.setBorder(BorderFactory.createLineBorder(Color.RED, 2));
+            if (pw2.equals("")) {                
                 confirmPw.setBackground(new Color(255, 175, 175));
             }
             if (pw.length()<6 && valid){

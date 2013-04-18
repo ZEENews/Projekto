@@ -4,10 +4,7 @@
  */
 package projekto;
 
-/**
- *
- * @author Julia
- */
+
 import java.awt.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
@@ -21,7 +18,7 @@ public class LoginScreen extends JFrame implements ActionListener, KeyListener {
     private JButton login, register, cancel;
     private JTextField mail;
     private JPasswordField password;
-    private Border standardBorder;
+    private Color standardColor;
 
     public LoginScreen() {
         super("Login");
@@ -37,8 +34,8 @@ public class LoginScreen extends JFrame implements ActionListener, KeyListener {
         JLabel nameLabel = new JLabel("E-mail:");
         cp.add(nameLabel, c);
         mail = new JTextField(15);
+        standardColor = mail.getBackground();
         mail.addKeyListener(this);
-        standardBorder = mail.getBorder();
         c.gridx = 1;
         c.gridwidth = 3;
         cp.add(mail, c);
@@ -94,18 +91,18 @@ public class LoginScreen extends JFrame implements ActionListener, KeyListener {
      * *
      */
     public void login() {
-        mail.setBorder(standardBorder);
-        password.setBorder(standardBorder);
+        mail.setBackground(standardColor);
+        password.setBackground(standardColor);
         boolean valid = true;
         String name = mail.getText();
         String pw = new String(password.getPassword());
         if (name.equals("")) {
             valid = false;
-            mail.setBorder(BorderFactory.createLineBorder(Color.RED, 2));
+            mail.setBackground(new Color(255, 175, 175));
         }
         if (pw.equals("")) {
             valid = false;
-            password.setBorder(BorderFactory.createLineBorder(Color.RED, 2));
+            password.setBackground(new Color(255, 175, 175));
         }
         if (valid) {
             if (authenticate(name, pw)) {
