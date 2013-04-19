@@ -88,6 +88,7 @@ public class DBConnect {
         Statement statement;
  
         String result = new String();
+        email = email.toLowerCase();
         
         try{
             Class.forName("org.postgresql.Driver").newInstance();
@@ -103,6 +104,10 @@ public class DBConnect {
             rs.close();
             statement.close();
             database.close();
+            
+            System.out.println("res " + result);
+            System.out.println("em " + email);
+            
             
             if(result.equalsIgnoreCase(email)){
                 return true;

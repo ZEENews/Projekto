@@ -247,6 +247,7 @@ public class CreateAccount extends JFrame implements ActionListener {
                     JOptionPane.showMessageDialog(null, "Password does not match.", "Invalid Password", JOptionPane.ERROR_MESSAGE);
                 }
                 if (valid) {
+                    email = email.toLowerCase();
                     db.createUser(email, vname, nname, geb, str, hnr, stadt, postleitzahl, pw);  //Diese Zeile ist neu
                     //DBConnector.getInstance().createUser(name, pw);
                     JOptionPane.showMessageDialog(null, "Account successfully created.", "Account created", JOptionPane.INFORMATION_MESSAGE);
