@@ -4,7 +4,6 @@
  */
 package projekto;
 
-
 import java.awt.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
@@ -106,7 +105,7 @@ public class LoginScreen extends JFrame implements ActionListener, KeyListener {
         if (valid) {
             if (authenticate(name, pw)) {
                 dispose();
-                //new MainGUI();
+                new MainGUI();
             } else {
                 JOptionPane.showMessageDialog(null, "Invalid username or password.", "Access denied", JOptionPane.ERROR_MESSAGE);
             }

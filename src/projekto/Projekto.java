@@ -11,6 +11,7 @@ public class Projekto {
      */
     public static void main(String[] args) {
         // TODO code application logic here
-        new LoginScreen();
+        //new LoginScreen();
+        new MainGUI();
     }
 }
