@@ -156,4 +156,33 @@ public class DBConnect {
             return null;
         }
     }
+    
+    public ArrayList<String> getCinemas() {
+        Connection database;
+        Statement statement;
+        
+        ArrayList<String> list = new ArrayList();
+        
+        try{
+            Class.forName("org.postgresql.Driver").newInstance();
+            database = DriverManager.getConnection("jdbc:postgresql://localhost:5432/dbprojekt", "projekt", "geheim"); 
+            statement = database.createStatement();
+            Statement an = database.createStatement();
+            
+            ResultSet rs = an.executeQuery("SELECT \"Name\", \"Adresse\" FROM \"Kino\"");
+            while( rs.next()){
+                list.add(rs.getString("Name") + " (" + rs.getString("Adresse") + ")");
+            }
+                
+            rs.close();
+            statement.close();
+            database.close();
+            
+            return list;
+        } catch (Exception ex) {
+            System.out.println("Keine Datenbankverbindung möglich: "
+                    + ex.getMessage());
+            return null;
+        }
+    }
 }
