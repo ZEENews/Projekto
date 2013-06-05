@@ -11,6 +11,8 @@ import java.awt.event.ActionListener;
 import java.awt.event.ItemEvent;
 import java.awt.event.ItemListener;
 import java.util.ArrayList;
+import java.util.GregorianCalendar;
+import java.util.StringTokenizer;
 import javax.swing.BorderFactory;
 import javax.swing.JButton;
 import javax.swing.JCheckBox;
@@ -31,7 +33,7 @@ public class ReservationPanel extends JPanel implements ActionListener, ItemList
     
     private JButton search;
     private JScrollPane resultPanelScroll;
-    private JComboBox cinema, date, genre;
+    private JComboBox<String> cinema, date, genre;
     private JSpinner hour, minute;
     private JTextField title;
     private JPanel timePanel;
@@ -90,7 +92,7 @@ public class ReservationPanel extends JPanel implements ActionListener, ItemList
         ArrayList<String> cinemaList = db.getCinemas();
         String[] cinemaArray = cinemaList.toArray(new String[cinemaList.size()]);
         
-        cinema = new JComboBox(cinemaArray);
+        cinema = new JComboBox<String>(cinemaArray);
         c.gridx = 1;
         searchPanel.add(cinema, c);
         
@@ -99,8 +101,8 @@ public class ReservationPanel extends JPanel implements ActionListener, ItemList
         c.gridy++;
         searchPanel.add(dateText, c);
         
-        String[] days = {"Montag", "Dienstag", "Mittwoch", "Donnerstag", "Freitag", "Samstag", "Sonntag"};
-        date = new JComboBox(days);
+        String[] days = getDateSelection(14);
+        date = new JComboBox<String>(days);
         c.gridx = 1;
         searchPanel.add(date, c);
         
@@ -137,7 +139,7 @@ public class ReservationPanel extends JPanel implements ActionListener, ItemList
         searchPanel.add(genreText, c);
         
         String[] genres = {"", "Action", "Animation", "Fantasy", "Horror", "Komödie", "Science Fiction", "Thriller"};
-        genre = new JComboBox(genres);
+        genre = new JComboBox<String>(genres);
         c.gridx = 1;
         searchPanel.add(genre, c);
         
@@ -166,12 +168,76 @@ public class ReservationPanel extends JPanel implements ActionListener, ItemList
     
     private void search() {
         
-        String cin = (String) cinema.getSelectedItem();
-        String day = (String) date.getSelectedItem();
+        String selectedTitle = null;
+        String selectedTime = null;
+        String selectedGenre = null;
+        
+        String selectedCinema = (String) cinema.getSelectedItem();
+        String selectedCinema2 = selectedCinema.replace(')', '\0');
+        StringTokenizer cinTokenizer = new StringTokenizer(selectedCinema2, "(");
+        String selectedCinemaName = cinTokenizer.nextToken();
+        String selectedCinemaCity = cinTokenizer.nextToken();
+        
+        String selectedDate = (String) date.getSelectedItem();
+        String selectedDate2 = selectedDate.replace(')', '\0');
+        String selectedDate3 = selectedDate2.substring(selectedDate.indexOf("(") + 1);
+        
+        if (selectTime.isSelected()) {
+            String hou = hour.getValue().toString();
+            String min = minute.getValue().toString();
+            selectedTime = hou + ":" + min;
+        }
+        if(genre.getSelectedIndex() != 0) {
+            selectedGenre = (String) genre.getSelectedItem();
+        }
+        String t = title.getText();
+        if(!t.matches("^\\s*$")) {
+            selectedTitle = t;
+        }
+        
+        System.out.println(selectedCinemaName);
+        System.out.println(selectedCinemaCity);
+        System.out.println(selectedDate3);
+        if(selectedTime != null) {
+            System.out.println(selectedTime);
+        }
+        if(selectedGenre != null) {
+            System.out.println(selectedGenre);
+        }
+        if(selectedTitle != null) {
+            System.out.println(selectedTitle);
+        }
         
         resultPanelScroll.setViewportView(resultPanel());
         resultPanelScroll.setVisible(true);
         revalidate();
+    }
+    
+    private String[] getDateSelection(int quantity) {
+        String[] dates = new String[quantity];
+        GregorianCalendar cal = new GregorianCalendar();
+        for (int i = 0; i < quantity; i++) {
+            String dayOfWeek = getdayOfWeekString(cal.get(GregorianCalendar.DAY_OF_WEEK));
+            String day = String.format("%02d", cal.get(GregorianCalendar.DAY_OF_MONTH));
+            String month = String.format("%02d", cal.get(GregorianCalendar.MONTH) + 1);
+            String year = String.format("%04d", cal.get(GregorianCalendar.YEAR));
+            dates[i] = dayOfWeek + " (" + day + "." + month + "." + year + ")";
+            cal.add(GregorianCalendar.DAY_OF_WEEK, 1);
+        }
+        
+        return dates;
+    }
+    
+    private String getdayOfWeekString(int dayOfWeek) {
+        switch(dayOfWeek) {
+            case 1: return "Sonntag";
+            case 2: return "Montag";
+            case 3: return "Dienstag";
+            case 4: return "Mittwoch";
+            case 5: return "Donnerstag";
+            case 6: return "Freitag";
+            default: return "Samstag";
+        }
     }
 
     @Override
