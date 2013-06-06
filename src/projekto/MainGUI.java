@@ -1,31 +1,11 @@
 package projekto;
 
-import java.awt.BorderLayout;
-import java.awt.Color;
 import java.awt.Dimension;
-import java.awt.Font;
-import java.awt.GridBagConstraints;
-import java.awt.GridBagLayout;
-import java.awt.GridLayout;
-import java.awt.Insets;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
-import java.util.ArrayList;
-import javax.swing.BorderFactory;
-import javax.swing.JButton;
-import javax.swing.JComboBox;
 import javax.swing.JFrame;
-import javax.swing.JLabel;
 import javax.swing.JPanel;
-import javax.swing.JScrollPane;
-import javax.swing.JSpinner;
 import javax.swing.JTabbedPane;
-import javax.swing.JTextField;
-import javax.swing.JTextPane;
-import javax.swing.SpinnerNumberModel;
-import javax.swing.text.SimpleAttributeSet;
-import javax.swing.text.StyleConstants;
-import javax.swing.text.StyledDocument;
 
 /**
  *
@@ -48,18 +28,13 @@ public class MainGUI extends JFrame implements ActionListener {
         add(tab);
         
         tab.addTab("Home", new HomePanel());
-        tab.addTab("Aktuelle Reservierungen", new ReservationPanel());
-        tab.addTab("Archiv", archivScreen());
-        tab.addTab("Benutzer", userScreen());   
+        tab.addTab("Reservierungen", new ReservationPanel());
+        tab.addTab("Benutzer", new UserPanel());   
         
         pack();
         setVisible(true);
     }
     
-    private JPanel archivScreen() {
-        JPanel content = new JPanel();
-        return content;
-    }
     
     private JPanel userScreen() {
         JPanel content = new JPanel();

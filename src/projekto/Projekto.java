@@ -17,7 +17,7 @@ public class Projekto {
      */
     public static void main(String[] args) {
         // TODO code application logic here
-        //new LoginScreen();
+
         LookAndFeelInfo[] bla=  UIManager.getInstalledLookAndFeels();
         for (int i = 0; i < bla.length; i++) {
             System.out.println(bla[i].getClassName());
@@ -33,6 +33,7 @@ public class Projekto {
         } catch (UnsupportedLookAndFeelException ex) {
             Logger.getLogger(Projekto.class.getName()).log(Level.SEVERE, null, ex);
         }
-        new MainGUI();
+        new LoginScreen();
+        //new MainGUI();
     }
 }

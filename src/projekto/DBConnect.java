@@ -45,6 +45,7 @@ public class DBConnect {
             System.out.println("Keine Datenbankverbindung möglich: "
                     + ex.getMessage());
         }
+        //return new User(email, vorname, nachname, geburtsdatum, strasse, hausnr, stadt, plz, pw);
     }
     
     /**
@@ -169,9 +170,9 @@ public class DBConnect {
             statement = database.createStatement();
             Statement an = database.createStatement();
             
-            ResultSet rs = an.executeQuery("SELECT \"Name\", \"Adresse\" FROM \"Kino\"");
+            ResultSet rs = an.executeQuery("SELECT \"Name\", \"Stadt\" FROM \"Kino\"");
             while( rs.next()){
-                list.add(rs.getString("Name") + " (" + rs.getString("Adresse") + ")");
+                list.add(rs.getString("Name") + " (" + rs.getString("Stadt") + ")");
             }
                 
             rs.close();

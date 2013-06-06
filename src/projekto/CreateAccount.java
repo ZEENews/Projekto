@@ -191,7 +191,7 @@ public class CreateAccount extends JFrame implements ActionListener {
             
             boolean valid = true;
             
-            if (email.equals("")||db.emailCheck(email)) {
+            if (email.equals("")||db.emailCheck(email)||!email.matches(".*@.*")) {
                 valid = false;
                
                 mail.setBackground(new Color(255, 175, 175));
