@@ -13,7 +13,9 @@ import javax.swing.JTabbedPane;
  */
 public class MainGUI extends JFrame implements ActionListener {
     
-    public MainGUI() {
+    private User logedUser;
+    
+    public MainGUI(User user) {
         super("Projekto");
         setDefaultCloseOperation(EXIT_ON_CLOSE);
         //setExtendedState(MAXIMIZED_BOTH);
@@ -29,10 +31,15 @@ public class MainGUI extends JFrame implements ActionListener {
         
         tab.addTab("Home", new HomePanel());
         tab.addTab("Reservierungen", new ReservationPanel());
-        tab.addTab("Benutzer", new UserPanel());   
+        
+        JTabbedPane userTab = new JTabbedPane();
+        userTab.addTab("Benutzerprofil", new UserInformationPanel(user, this));
+        userTab.addTab("Abgeschlossene Reservierungen", new OldReservationPanel());
+        tab.addTab("Benutzer", userTab);   
         
         pack();
         setVisible(true);
+        logedUser = user;
     }
     
     

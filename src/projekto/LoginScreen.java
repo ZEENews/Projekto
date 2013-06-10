@@ -54,11 +54,11 @@ public class LoginScreen extends JFrame implements ActionListener, KeyListener {
         c.gridwidth = 1;
         c.gridy = 2;
         cp.add(login, c);
-        register = new JButton("Register");
+        register = new JButton("Registrieren");
         register.addActionListener(this);
         c.gridx = 2;
         cp.add(register, c);
-        cancel = new JButton("Cancel");
+        cancel = new JButton("Abbrechen");
         cancel.addActionListener(this);
         c.gridx = 3;
         c.insets = new Insets(5, 5, 5, 4);
@@ -72,15 +72,10 @@ public class LoginScreen extends JFrame implements ActionListener, KeyListener {
      */
     public boolean authenticate(String user, String password) {
         DBConnect db = new DBConnect();
-        String result;
-        
-        result = db.loginCheck(user);  
+        String result = db.loginCheck(user);  
         if(result.equals(password)){
-            JOptionPane.showMessageDialog(null, "Login successfully.", "Login", JOptionPane.INFORMATION_MESSAGE);
-            dispose();
             return true;
         }else{
-            dispose();
             return false;
         }
     }  
@@ -105,9 +100,11 @@ public class LoginScreen extends JFrame implements ActionListener, KeyListener {
         if (valid) {
             if (authenticate(name, pw)) {
                 dispose();
-                new MainGUI();
+                DBConnect db = new DBConnect();
+                int userID = db.getUserID(name);
+                new MainGUI(new User(userID));
             } else {
-                JOptionPane.showMessageDialog(null, "Invalid username or password.", "Access denied", JOptionPane.ERROR_MESSAGE);
+                JOptionPane.showMessageDialog(null, "Ungültige E-Mail Adresse oder Passwort.", "Login fehlgeschlagen", JOptionPane.ERROR_MESSAGE);
             }
         }
     }

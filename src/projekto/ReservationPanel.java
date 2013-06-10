@@ -10,9 +10,14 @@ import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.awt.event.ItemEvent;
 import java.awt.event.ItemListener;
+import java.sql.Date;
+import java.text.ParseException;
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.GregorianCalendar;
 import java.util.StringTokenizer;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 import javax.swing.BorderFactory;
 import javax.swing.JButton;
 import javax.swing.JCheckBox;
@@ -131,6 +136,7 @@ public class ReservationPanel extends JPanel implements ActionListener, ItemList
         
         SpinnerNumberModel minuteModel = new SpinnerNumberModel(0, 0, 59, 1);
         minute = new JSpinner(minuteModel);
+        minute.setEditor(new JSpinner.NumberEditor(minute, "00"));
         timePanel.add(minute);
         
         JLabel genreText = new JLabel("<html>Genre:<br><font color=\"888888\" size=\"2\">(optional)</font></html>");
@@ -162,8 +168,8 @@ public class ReservationPanel extends JPanel implements ActionListener, ItemList
         return alignSearchNorth;
     }
     
-    private JPanel resultPanel() {
-        return new JPanel();
+    private JPanel resultPanel(ArrayList<String[]> performances) {
+        return new PerformancePanel(performances);
     }
     
     private void search() {
@@ -173,15 +179,21 @@ public class ReservationPanel extends JPanel implements ActionListener, ItemList
         String selectedGenre = null;
         
         String selectedCinema = (String) cinema.getSelectedItem();
-        String selectedCinema2 = selectedCinema.replace(')', '\0');
-        StringTokenizer cinTokenizer = new StringTokenizer(selectedCinema2, "(");
+        selectedCinema = selectedCinema.replace(")", "");
+        StringTokenizer cinTokenizer = new StringTokenizer(selectedCinema, "(");
         String selectedCinemaName = cinTokenizer.nextToken();
+        selectedCinemaName = selectedCinemaName.substring(0, selectedCinemaName.length() - 1);
         String selectedCinemaCity = cinTokenizer.nextToken();
         
-        String selectedDate = (String) date.getSelectedItem();
-        String selectedDate2 = selectedDate.replace(')', '\0');
-        String selectedDate3 = selectedDate2.substring(selectedDate.indexOf("(") + 1);
+        String selectedDateString = (String) date.getSelectedItem();
+        selectedDateString = selectedDateString.replace(")", "");
+        selectedDateString = selectedDateString.substring(selectedDateString.indexOf("(") + 1);
         
+        SimpleDateFormat df = new SimpleDateFormat("dd.MM.yyyy");
+        Date selectedDate = null;
+        try {
+            selectedDate = new Date(df.parse(selectedDateString).getTime());
+        } catch (ParseException ex) {}
         if (selectTime.isSelected()) {
             String hou = hour.getValue().toString();
             String min = minute.getValue().toString();
@@ -195,11 +207,39 @@ public class ReservationPanel extends JPanel implements ActionListener, ItemList
             selectedTitle = t;
         }
         
-        System.out.println(selectedCinemaName);
-        System.out.println(selectedCinemaCity);
-        System.out.println(selectedDate3);
         if(selectedTime != null) {
-            System.out.println(selectedTime);
+            if(selectedTitle != null) {
+                // suche nach film mit zeit
+            }
+            else if(selectedGenre != null) {
+                //suche nach genre mit zeit
+            }
+            else {
+                // suche nach zeit
+            }
+        }
+        else {
+            if(selectedTitle != null) {
+                // suche nach film ohne zeit
+            }
+            else if(selectedGenre != null) {
+                // suche nach genre ohne zeit
+            }
+            else {
+                if(selectedDate != null) {
+                    System.out.println("'" + selectedCinemaName + "'");
+                    System.out.println("'" + selectedCinemaCity + "'");
+                    System.out.println("'" + selectedDate + "'");
+                    ArrayList<String[]> performances = new DBConnect().getPerformances(selectedCinemaName, selectedCinemaCity, selectedDate);
+                            
+                    resultPanelScroll.setViewportView(resultPanel(performances));
+                    resultPanelScroll.setVisible(true);
+                    revalidate();
+                    //for (int i = 0; i < performances.size(); i++) {
+                    //    System.out.println(performances.get(i));
+                    //}
+                }
+            }
         }
         if(selectedGenre != null) {
             System.out.println(selectedGenre);
@@ -207,10 +247,7 @@ public class ReservationPanel extends JPanel implements ActionListener, ItemList
         if(selectedTitle != null) {
             System.out.println(selectedTitle);
         }
-        
-        resultPanelScroll.setViewportView(resultPanel());
-        resultPanelScroll.setVisible(true);
-        revalidate();
+
     }
     
     private String[] getDateSelection(int quantity) {

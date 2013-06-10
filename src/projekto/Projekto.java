@@ -16,12 +16,6 @@ public class Projekto {
      * @param args the command line arguments
      */
     public static void main(String[] args) {
-        // TODO code application logic here
-
-        LookAndFeelInfo[] bla=  UIManager.getInstalledLookAndFeels();
-        for (int i = 0; i < bla.length; i++) {
-            System.out.println(bla[i].getClassName());
-        }
         try {
             UIManager.setLookAndFeel("javax.swing.plaf.nimbus.NimbusLookAndFeel");
         } catch (ClassNotFoundException ex) {
@@ -33,7 +27,7 @@ public class Projekto {
         } catch (UnsupportedLookAndFeelException ex) {
             Logger.getLogger(Projekto.class.getName()).log(Level.SEVERE, null, ex);
         }
-        new LoginScreen();
-        //new MainGUI();
+        //new LoginScreen();
+        new MainGUI(new User(1));
     }
 }
