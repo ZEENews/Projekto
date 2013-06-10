@@ -11,13 +11,12 @@ import java.awt.event.ActionListener;
 import java.awt.event.ItemEvent;
 import java.awt.event.ItemListener;
 import java.sql.Date;
+import java.sql.Time;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.GregorianCalendar;
 import java.util.StringTokenizer;
-import java.util.logging.Level;
-import java.util.logging.Logger;
 import javax.swing.BorderFactory;
 import javax.swing.JButton;
 import javax.swing.JCheckBox;
@@ -144,7 +143,7 @@ public class ReservationPanel extends JPanel implements ActionListener, ItemList
         c.gridx = 0;
         searchPanel.add(genreText, c);
         
-        String[] genres = {"", "Action", "Animation", "Fantasy", "Horror", "Komödie", "Science Fiction", "Thriller"};
+        String[] genres = {"", "Action", "Animation", "Fantasy", "Horror", "Komödie", "Science-Fiction", "Thriller"};
         genre = new JComboBox<String>(genres);
         c.gridx = 1;
         searchPanel.add(genre, c);
@@ -175,7 +174,7 @@ public class ReservationPanel extends JPanel implements ActionListener, ItemList
     private void search() {
         
         String selectedTitle = null;
-        String selectedTime = null;
+        Time selectedTime = null;
         String selectedGenre = null;
         
         String selectedCinema = (String) cinema.getSelectedItem();
@@ -195,9 +194,9 @@ public class ReservationPanel extends JPanel implements ActionListener, ItemList
             selectedDate = new Date(df.parse(selectedDateString).getTime());
         } catch (ParseException ex) {}
         if (selectTime.isSelected()) {
-            String hou = hour.getValue().toString();
-            String min = minute.getValue().toString();
-            selectedTime = hou + ":" + min;
+            int hou = Integer.parseInt(hour.getValue().toString());
+            int min = Integer.parseInt(minute.getValue().toString());
+            selectedTime = new Time(hou, min, 0);
         }
         if(genre.getSelectedIndex() != 0) {
             selectedGenre = (String) genre.getSelectedItem();
@@ -207,47 +206,50 @@ public class ReservationPanel extends JPanel implements ActionListener, ItemList
             selectedTitle = t;
         }
         
+        ArrayList<String[]> performances = null;
         if(selectedTime != null) {
             if(selectedTitle != null) {
-                // suche nach film mit zeit
+                // suche nach kino, stadt, datum, zeit, film
+                int movieID = new DBConnect().getMovieID(selectedTitle);
+                if(movieID > 0) {
+                    performances = new DBConnect().getPerformances(selectedCinemaName, selectedCinemaCity, selectedDate, selectedTime, movieID);
+                }       
             }
             else if(selectedGenre != null) {
-                //suche nach genre mit zeit
+                //suche nach kino, stadt, datum, zeit, genre
+                performances = new DBConnect().getPerformances(selectedCinemaName, selectedCinemaCity, selectedDate, selectedTime, selectedGenre);
             }
             else {
-                // suche nach zeit
+                // suche nach kino, stadt, datum, zeit
+                performances = new DBConnect().getPerformances(selectedCinemaName, selectedCinemaCity, selectedDate, selectedTime);
             }
         }
         else {
             if(selectedTitle != null) {
-                // suche nach film ohne zeit
+                // suche nach kino, stadt, datum, film
+                int movieID = new DBConnect().getMovieID(selectedTitle);
+                if(movieID > 0) {
+                    performances = new DBConnect().getPerformances(selectedCinemaName, selectedCinemaCity, selectedDate, movieID);
+                }    
             }
             else if(selectedGenre != null) {
-                // suche nach genre ohne zeit
+                // suche nach kino, stadt, datum, genre
+                performances = new DBConnect().getPerformances(selectedCinemaName, selectedCinemaCity, selectedDate, selectedGenre);
             }
             else {
-                if(selectedDate != null) {
-                    System.out.println("'" + selectedCinemaName + "'");
-                    System.out.println("'" + selectedCinemaCity + "'");
-                    System.out.println("'" + selectedDate + "'");
-                    ArrayList<String[]> performances = new DBConnect().getPerformances(selectedCinemaName, selectedCinemaCity, selectedDate);
-                            
-                    resultPanelScroll.setViewportView(resultPanel(performances));
-                    resultPanelScroll.setVisible(true);
-                    revalidate();
-                    //for (int i = 0; i < performances.size(); i++) {
-                    //    System.out.println(performances.get(i));
-                    //}
-                }
+                //suche nach kino, stadt, datum
+                performances = new DBConnect().getPerformances(selectedCinemaName, selectedCinemaCity, selectedDate);
             }
         }
-        if(selectedGenre != null) {
-            System.out.println(selectedGenre);
+        if(performances != null) {
+            resultPanelScroll.setViewportView(resultPanel(performances));
+            
         }
-        if(selectedTitle != null) {
-            System.out.println(selectedTitle);
+        else {
+            resultPanelScroll.setViewportView(new JLabel("Nix gefunden"));
         }
-
+        resultPanelScroll.setVisible(true);
+        revalidate();
     }
     
     private String[] getDateSelection(int quantity) {

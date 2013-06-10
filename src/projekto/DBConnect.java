@@ -9,6 +9,7 @@ import java.sql.Date;
 import java.sql.DriverManager;
 import java.sql.ResultSet;
 import java.sql.Statement;
+import java.sql.Time;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 
@@ -123,7 +124,7 @@ public class DBConnect {
      * @param movie
      * @return
      */
-    public ArrayList getMovies(String movie){
+    public ArrayList getMovies(){
         Connection database;
  
         ArrayList<String> list = new ArrayList();
@@ -133,20 +134,19 @@ public class DBConnect {
             database = DriverManager.getConnection("jdbc:postgresql://localhost:5432/dbprojekt", "projekt", "geheim"); 
             Statement an = database.createStatement();
             
-            ResultSet rs = an.executeQuery("SELECT * FROM \"Filme\" WHERE \"Titel\" ="+movie);
+            ResultSet rs = an.executeQuery("SELECT \"Filmname\" FROM \"Film\"");
             while( rs.next()){
-                list.add("bla");
+                list.add(rs.getString("Filmname"));
             }
                 
             rs.close();
             database.close();
             
-            return list;
         } catch (Exception ex) {
             System.out.println("Keine Datenbankverbindung möglich: "
                     + ex.getMessage());
-            return null;
         }
+        return list;
     }
     
     public ArrayList<String> getCinemas() {
@@ -554,21 +554,40 @@ public class DBConnect {
         }
     }
     
+    public int getMovieID(String title) {
+        Connection database;
+ 
+        int result = -1;
+        
+        try {
+            Class.forName("org.postgresql.Driver").newInstance();
+            database = DriverManager.getConnection("jdbc:postgresql://localhost:5432/dbprojekt", "projekt", "geheim"); 
+            Statement an = database.createStatement();
+            
+            ResultSet rs = an.executeQuery("SELECT \"Filmid\" FROM \"Film\" WHERE \"Filmname\"='" + title + "' LIMIT 1");
+            while( rs.next()){
+                result = rs.getInt("Filmid");
+            }
+        } catch (Exception ex) {
+            System.out.println("Keine Datenbankverbindung möglich: "
+                    + ex.getMessage());
+        }
+        return result;
+    }
+    
     public ArrayList<String[]> getPerformances(String cinema, String city, Date date) {
         Connection database;
         
         ArrayList<String[]> list = new ArrayList();
+        
         String statement = 
-                "SELECT \"Filmname\" AS \"Film\", \"Spiellaenge\" AS \"Dauer\", \"Altersbeschraenkung\" AS \"FSK\", \"SaalNr\", \"Uhrzeit\", \"3D\", \"Vorstellungid\""
-              + "FROM \"Vorstellung\""
-              + "LEFT JOIN \"Saal\" ON \"Vorstellung\".\"Saalid\"=\"Saal\".\"Saalid\""
-              + "LEFT JOIN \"Kino\" ON \"Saal\".\"Kinoid\"=\"Kino\".\"Kinoid\""
-              + "LEFT JOIN \"Film\" ON \"Vorstellung\".\"Filmid\"=\"Film\".\"Filmid\""
-              + "LEFT JOIN \"Termin\" ON \"Vorstellung\".\"Terminid\"=\"Termin\".\"Terminid\""
-              + "WHERE \"Kino\".\"Name\"='" + cinema + "' AND"
-              + "\"Kino\".\"Stadt\"='" + city + "' AND"
-              + "\"Termin\".\"Datum\"='" + date + "'"
-              + "ORDER BY \"Film\", \"Uhrzeit\"";
+                "SELECT \"Filmname\", \"Dauer\", \"FSK\", \"SaalNr\", \"Uhrzeit\", \"3D\", \"Vorstellungid\""
+              + "FROM \"Vorstellungjoin\""
+              + "WHERE \"Kinoname\"='" + cinema + "' AND"
+              + "\"Stadt\"='" + city + "' AND"
+              + "\"Datum\"='" + date + "'"
+              + "ORDER BY \"Filmname\", \"Uhrzeit\"";
+        
         try {
             Class.forName("org.postgresql.Driver").newInstance();
             database = DriverManager.getConnection("jdbc:postgresql://localhost:5432/dbprojekt", "projekt", "geheim"); 
@@ -578,7 +597,7 @@ public class DBConnect {
             while(rs.next()) {
                 
                 String[] performance = new String[7];
-                performance[0] = rs.getString("Film");
+                performance[0] = rs.getString("Filmname");
                 performance[1] = "" + rs.getInt("Dauer");
                 performance[2] = "" + rs.getInt("FSK");
                 performance[3] = rs.getString("3D");
@@ -586,6 +605,233 @@ public class DBConnect {
                 SimpleDateFormat df = new SimpleDateFormat("HH:mm");
                 String time = df.format(rs.getTime("Uhrzeit"));
                 performance[5] = time;
+                performance[6] = "" + rs.getInt("Vorstellungid");
+                
+                list.add(performance);
+            }
+                
+            rs.close();
+            database.close();  
+            
+        } catch (Exception ex) {
+            System.out.println("Keine Datenbankverbindung möglich: "
+                    + ex);
+        }
+        return list;
+    }
+    
+    public ArrayList<String[]> getPerformances(String cinema, String city, Date date, Time time) {
+        Connection database;
+        
+        ArrayList<String[]> list = new ArrayList();
+        
+        String statement = 
+                "SELECT \"Filmname\", \"Dauer\", \"FSK\", \"SaalNr\", \"Uhrzeit\", \"3D\", \"Vorstellungid\""
+              + "FROM \"Vorstellungjoin\""
+              + "WHERE \"Kinoname\"='" + cinema + "' AND"
+              + "\"Stadt\"='" + city + "' AND"
+              + "\"Datum\"='" + date + "' AND"
+              +  "\"Uhrzeit\">='" + time + "'"
+              + "ORDER BY \"Filmname\", \"Uhrzeit\"";
+        
+        try {
+            Class.forName("org.postgresql.Driver").newInstance();
+            database = DriverManager.getConnection("jdbc:postgresql://localhost:5432/dbprojekt", "projekt", "geheim"); 
+            Statement an = database.createStatement();
+            
+            ResultSet rs = an.executeQuery(statement);
+            while(rs.next()) {
+                
+                String[] performance = new String[7];
+                performance[0] = rs.getString("Filmname");
+                performance[1] = "" + rs.getInt("Dauer");
+                performance[2] = "" + rs.getInt("FSK");
+                performance[3] = rs.getString("3D");
+                performance[4] = "" + rs.getInt("SaalNr");
+                SimpleDateFormat df = new SimpleDateFormat("HH:mm");
+                performance[5] = df.format(rs.getTime("Uhrzeit"));
+                performance[6] = "" + rs.getInt("Vorstellungid");
+                
+                list.add(performance);
+            }
+                
+            rs.close();
+            database.close();  
+            
+        } catch (Exception ex) {
+            System.out.println("Keine Datenbankverbindung möglich: "
+                    + ex);
+        }
+        return list;
+    }
+    
+    public ArrayList<String[]> getPerformances(String cinema, String city, Date date, Time time, String genre) {
+        Connection database;
+        
+        ArrayList<String[]> list = new ArrayList();
+        
+        String statement = 
+                "SELECT \"Filmname\", \"Dauer\", \"FSK\", \"SaalNr\", \"Uhrzeit\", \"3D\", \"Vorstellungid\""
+              + "FROM \"Vorstellungjoin\""
+              + "WHERE \"Kinoname\"='" + cinema + "' AND"
+              + "\"Stadt\"='" + city + "' AND"
+              + "\"Datum\"='" + date + "' AND"
+              + "\"Uhrzeit\">='" + time + "' AND"
+              + "\"Genre\"='" + genre + "'"
+              + "ORDER BY \"Filmname\", \"Uhrzeit\"";
+        
+        try {
+            Class.forName("org.postgresql.Driver").newInstance();
+            database = DriverManager.getConnection("jdbc:postgresql://localhost:5432/dbprojekt", "projekt", "geheim"); 
+            Statement an = database.createStatement();
+            
+            ResultSet rs = an.executeQuery(statement);
+            while(rs.next()) {
+                
+                String[] performance = new String[7];
+                performance[0] = rs.getString("Filmname");
+                performance[1] = "" + rs.getInt("Dauer");
+                performance[2] = "" + rs.getInt("FSK");
+                performance[3] = rs.getString("3D");
+                performance[4] = "" + rs.getInt("SaalNr");
+                SimpleDateFormat df = new SimpleDateFormat("HH:mm");
+                performance[5] = df.format(rs.getTime("Uhrzeit"));
+                performance[6] = "" + rs.getInt("Vorstellungid");
+                
+                list.add(performance);
+            }
+                
+            rs.close();
+            database.close();  
+            
+        } catch (Exception ex) {
+            System.out.println("Keine Datenbankverbindung möglich: "
+                    + ex);
+        }
+        return list;
+    }
+    
+    public ArrayList<String[]> getPerformances(String cinema, String city, Date date, Time time, int movieID) {
+        Connection database;
+        
+        ArrayList<String[]> list = new ArrayList();
+        
+        String statement = 
+                "SELECT \"Filmname\", \"Dauer\", \"FSK\", \"SaalNr\", \"Uhrzeit\", \"3D\", \"Vorstellungid\""
+              + "FROM \"Vorstellungjoin\""
+              + "WHERE \"Kinoname\"='" + cinema + "' AND"
+              + "\"Stadt\"='" + city + "' AND"
+              + "\"Datum\"='" + date + "' AND"
+              + "\"Uhrzeit\">='" + time + "' AND"
+              + "\"Filmid\"='" + movieID + "'"
+              + "ORDER BY \"Filmname\", \"Uhrzeit\"";
+        
+        try {
+            Class.forName("org.postgresql.Driver").newInstance();
+            database = DriverManager.getConnection("jdbc:postgresql://localhost:5432/dbprojekt", "projekt", "geheim"); 
+            Statement an = database.createStatement();
+            
+            ResultSet rs = an.executeQuery(statement);
+            while(rs.next()) {
+                
+                String[] performance = new String[7];
+                performance[0] = rs.getString("Filmname");
+                performance[1] = "" + rs.getInt("Dauer");
+                performance[2] = "" + rs.getInt("FSK");
+                performance[3] = rs.getString("3D");
+                performance[4] = "" + rs.getInt("SaalNr");
+                SimpleDateFormat df = new SimpleDateFormat("HH:mm");
+                performance[5] = df.format(rs.getTime("Uhrzeit"));
+                performance[6] = "" + rs.getInt("Vorstellungid");
+                
+                list.add(performance);
+            }
+                
+            rs.close();
+            database.close();  
+            
+        } catch (Exception ex) {
+            System.out.println("Keine Datenbankverbindung möglich: "
+                    + ex);
+        }
+        return list;
+    }
+    
+    public ArrayList<String[]> getPerformances(String cinema, String city, Date date, int movieID) {
+        Connection database;
+        
+        ArrayList<String[]> list = new ArrayList();
+        
+        String statement = 
+                "SELECT \"Filmname\", \"Dauer\", \"FSK\", \"SaalNr\", \"Uhrzeit\", \"3D\", \"Vorstellungid\""
+              + "FROM \"Vorstellungjoin\""
+              + "WHERE \"Kinoname\"='" + cinema + "' AND"
+              + "\"Stadt\"='" + city + "' AND"
+              + "\"Datum\"='" + date + "' AND"
+              + "\"Filmid\"='" + movieID + "'"
+              + "ORDER BY \"Filmname\", \"Uhrzeit\"";
+        
+        try {
+            Class.forName("org.postgresql.Driver").newInstance();
+            database = DriverManager.getConnection("jdbc:postgresql://localhost:5432/dbprojekt", "projekt", "geheim"); 
+            Statement an = database.createStatement();
+            
+            ResultSet rs = an.executeQuery(statement);
+            while(rs.next()) {
+                
+                String[] performance = new String[7];
+                performance[0] = rs.getString("Filmname");
+                performance[1] = "" + rs.getInt("Dauer");
+                performance[2] = "" + rs.getInt("FSK");
+                performance[3] = rs.getString("3D");
+                performance[4] = "" + rs.getInt("SaalNr");
+                SimpleDateFormat df = new SimpleDateFormat("HH:mm");
+                performance[5] = df.format(rs.getTime("Uhrzeit"));
+                performance[6] = "" + rs.getInt("Vorstellungid");
+                
+                list.add(performance);
+            }
+                
+            rs.close();
+            database.close();  
+            
+        } catch (Exception ex) {
+            System.out.println("Keine Datenbankverbindung möglich: "
+                    + ex);
+        }
+        return list;
+    }
+    
+    public ArrayList<String[]> getPerformances(String cinema, String city, Date date, String genre) {
+        Connection database;
+        
+        ArrayList<String[]> list = new ArrayList();
+        
+        String statement = 
+                "SELECT \"Filmname\", \"Dauer\", \"FSK\", \"SaalNr\", \"Uhrzeit\", \"3D\", \"Vorstellungid\""
+              + "FROM \"Vorstellungjoin\""
+              + "WHERE \"Kinoname\"='" + cinema + "' AND"
+              + "\"Stadt\"='" + city + "' AND"
+              + "\"Datum\"='" + date + "' AND"
+              + "\"Genre\"='" + genre + "'"
+              + "ORDER BY \"Filmname\", \"Uhrzeit\"";
+        
+        try {
+            Class.forName("org.postgresql.Driver").newInstance();
+            database = DriverManager.getConnection("jdbc:postgresql://localhost:5432/dbprojekt", "projekt", "geheim"); 
+            Statement an = database.createStatement();
+            
+            ResultSet rs = an.executeQuery(statement);
+            while(rs.next()) {
+                
+                String[] performance = new String[7];
+                performance[0] = rs.getString("Filmname");
+                performance[1] = "" + rs.getInt("Dauer");
+                performance[2] = "" + rs.getInt("FSK");
+                performance[3] = rs.getString("3D");
+                performance[4] = "" + rs.getInt("SaalNr");
+                SimpleDateFormat df = new SimpleDateFormat("HH:mm");
+                performance[5] = df.format(rs.getTime("Uhrzeit"));
                 performance[6] = "" + rs.getInt("Vorstellungid");
                 
                 list.add(performance);
