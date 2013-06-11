@@ -14,9 +14,7 @@ import java.awt.event.MouseListener;
 import java.util.ArrayList;
 import javax.swing.BorderFactory;
 import javax.swing.JLabel;
-import javax.swing.JMenuItem;
 import javax.swing.JPanel;
-import javax.swing.JPopupMenu;
 import javax.swing.JTable;
 import javax.swing.ListSelectionModel;
 import javax.swing.table.DefaultTableModel;
@@ -32,8 +30,11 @@ public class MovieCard extends JPanel implements MouseListener {
     private DefaultTableModel model;
     private JTable table;
     private ArrayList<String> performanceIDs;
+    private MainGUI mainGUI;
+    private User user;
+    private String date;
             
-    public MovieCard(String title, String length, String fsk, String type) {
+    public MovieCard(String title, String length, String fsk, String type, String date, MainGUI mainGUI, User user) {
         super();
         setLayout(new BorderLayout());
         setBorder(BorderFactory.createLineBorder(Color.black));
@@ -90,10 +91,14 @@ public class MovieCard extends JPanel implements MouseListener {
         tablePanel.add(table, BorderLayout.CENTER);
 
         JTableHeader tableHeader = table.getTableHeader();
+        tableHeader.setReorderingAllowed(false);
         tablePanel.add(tableHeader, BorderLayout.NORTH);
         
         this.title = title;
-        performanceIDs = new ArrayList<String>();
+        this.mainGUI = mainGUI;
+        this.user = user;
+        this.date = date;
+        this.performanceIDs = new ArrayList<String>();
     }
     
     public void addPerformance(String[] performance, String performanceID) {
@@ -113,7 +118,6 @@ public class MovieCard extends JPanel implements MouseListener {
 
     @Override
     public void mouseReleased(MouseEvent me) {
-        System.out.println("GEHT REIN");
         int r = table.rowAtPoint(me.getPoint());
         if (r >= 0 && r < table.getRowCount()) {
             table.setRowSelectionInterval(r, r);
@@ -125,11 +129,13 @@ public class MovieCard extends JPanel implements MouseListener {
         if (rowindex < 0) {
             return;
         }
-        System.out.println(me.getButton());
-        if (me.getButton() == 3 && me.getComponent() instanceof JTable ) {
-            JPopupMenu popup = new JPopupMenu();
-            popup.add(new JMenuItem("Reservieren"));
-            popup.show(me.getComponent(), me.getX(), me.getY());
+
+        if (me.getButton() == 1 && me.getComponent() instanceof JTable && me.getClickCount() >= 2) {
+            String time = (String) table.getValueAt(rowindex, 1);
+            mainGUI.setEnabled(false);
+            
+            ReservationScreen reserve = new ReservationScreen(mainGUI, performanceIDs.get(rowindex), title, date, time, user);
+            reserve.setAlwaysOnTop(true);
         }
     }
 

@@ -1,20 +1,12 @@
 package projekto;
 
 import java.awt.BorderLayout;
-import java.awt.Color;
-import java.awt.Font;
 import java.awt.GridBagConstraints;
 import java.awt.GridBagLayout;
-import java.awt.GridLayout;
 import java.awt.Insets;
 import java.util.ArrayList;
 import javax.swing.BorderFactory;
-import javax.swing.JLabel;
 import javax.swing.JPanel;
-import javax.swing.JTable;
-import javax.swing.ListSelectionModel;
-import javax.swing.table.DefaultTableModel;
-import javax.swing.table.JTableHeader;
 
 /**
  *
@@ -22,7 +14,7 @@ import javax.swing.table.JTableHeader;
  */
 public class PerformancePanel extends JPanel {
     
-    public PerformancePanel(ArrayList<String[]> performances) {
+    public PerformancePanel(ArrayList<String[]> performances, String date, MainGUI mainGUI, User user) {
         super();
         setBorder(BorderFactory.createEmptyBorder(10, 10, 0, 10));
         setLayout(new BorderLayout());
@@ -55,7 +47,7 @@ public class PerformancePanel extends JPanel {
                 oldMovieCard.addPerformance(new String[]{room, time}, id);
                 continue;
             }
-            oldMovieCard = new MovieCard(title, length, fsk, threeD);
+            oldMovieCard = new MovieCard(title, length, fsk, threeD, date, mainGUI, user);
             oldMovieCard.addPerformance(new String[]{room, time}, id);
             c.gridy++;
             alignNorth.add(oldMovieCard, c);

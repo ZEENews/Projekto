@@ -10,8 +10,8 @@ import javax.swing.JTabbedPane;
  */
 public class MainGUI extends JFrame {
     
-    private User logedUser;
-    
+    ReservationHistoryPanel reservationHistory;
+
     public MainGUI(User user) {
         super("Projekto");
         setDefaultCloseOperation(EXIT_ON_CLOSE);
@@ -22,15 +22,19 @@ public class MainGUI extends JFrame {
         add(tab);
         
         tab.addTab("Home", new HomePanel());
-        tab.addTab("Reservierungen", new ReservationPanel());
+        tab.addTab("Reservierungen", new ReservationPanel(this, user));
         
         JTabbedPane userTab = new JTabbedPane();
         userTab.addTab("Benutzerprofil", new UserInformationPanel(user, this));
-        userTab.addTab("Abgeschlossene Reservierungen", new OldReservationPanel());
+        reservationHistory = new ReservationHistoryPanel(user);
+        userTab.addTab("Abgeschlossene Reservierungen", reservationHistory);
         tab.addTab("Benutzer", userTab);   
         
         pack();
         setVisible(true);
-        logedUser = user;
+    }
+    
+    public void updateReservationHistory() {
+        reservationHistory.updateHistory();
     }
 }

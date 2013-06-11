@@ -846,4 +846,106 @@ public class DBConnect {
         }
         return list;
     }
+    
+    public boolean previousReservation(int userID, int performanceID) {
+        Connection database;
+ 
+        boolean result = true;
+        
+        try {
+            Class.forName("org.postgresql.Driver").newInstance();
+            database = DriverManager.getConnection("jdbc:postgresql://localhost:5432/dbprojekt", "projekt", "geheim"); 
+            Statement an = database.createStatement();
+            
+            ResultSet rs = an.executeQuery("SELECT count(*) FROM \"Reservierung\""
+                    +"WHERE \"Benutzerid\"=" + userID + " AND"
+                    + "\"Vorstellungid\"=" + performanceID);
+            if( rs.next()){
+                int count = rs.getInt(1);
+                if(count == 0) {
+                    result = false;
+                }
+            }
+        } catch (Exception ex) {
+            System.out.println("Keine Datenbankverbindung möglich: "
+                    + ex);
+        }
+        return result;
+    }
+    
+    public int getAvailableTickets(int performanceID, String category) {
+        Connection database;
+ 
+        int result = -1;
+        int count = 0;
+        try {
+            Class.forName("org.postgresql.Driver").newInstance();
+            database = DriverManager.getConnection("jdbc:postgresql://localhost:5432/dbprojekt", "projekt", "geheim"); 
+            Statement an = database.createStatement();
+            
+            ResultSet rs = an.executeQuery("SELECT \"TicketAnzahl\" FROM \"Reservierung\""
+                    + "WHERE \"Vorstellungid\"=" + performanceID + " AND"
+                    + "\"Kategorie\"='" + category + "'");
+            while( rs.next()){
+                count += rs.getInt("TicketAnzahl");
+            }
+            int maxTickets = getTickets(performanceID, category);
+            result = maxTickets - count;
+        } catch (Exception ex) {
+            System.out.println("Keine Datenbankverbindung möglich: "
+                    + ex.getMessage());
+            return -1;
+        }
+        return result;
+    }
+    
+    public int getTickets(int performanceID, String category) {
+        Connection database;
+        String select = null;
+        if(category.equals("Loge")) {
+            select = "AnzahlLoge";
+        }
+        else if(category.equals("Parkett")) {
+            select = "AnzahlParkett";
+        }
+        else {
+            System.out.println("Invalid category: " + category);
+            return -1;
+        }
+        int result = -1;
+        try {
+            Class.forName("org.postgresql.Driver").newInstance();
+            database = DriverManager.getConnection("jdbc:postgresql://localhost:5432/dbprojekt", "projekt", "geheim"); 
+            Statement an = database.createStatement();
+            
+            ResultSet rs = an.executeQuery("SELECT \""+ select + "\" FROM \"Vorstellung\""
+                    + "LEFT JOIN \"Saal\" ON \"Vorstellung\".\"Saalid\"=\"Saal\".\"Saalid\""
+                    + "WHERE \"Vorstellungid\"=" + performanceID);
+            if(rs.next()){
+                result = rs.getInt(select);
+            }
+        } catch (Exception ex) {
+            System.out.println("Keine Datenbankverbindung möglich: "
+                    + ex.getMessage());
+            return -1;
+        }
+        return result;
+    }
+    
+    public void reserveTickets(int performanceID, int userID, String category, int amount) {
+        Connection database;
+
+        try {
+            Class.forName("org.postgresql.Driver").newInstance();
+            database = DriverManager.getConnection("jdbc:postgresql://localhost:5432/dbprojekt", "projekt", "geheim"); 
+
+            Statement an = database.createStatement();
+            an.executeUpdate("INSERT INTO \"Reservierung\" (\"Vorstellungid\", \"Benutzerid\", \"Kategorie\", \"TicketAnzahl\")" + 
+                             "VALUES ('" + performanceID + "', '" + userID + "', '" + category + "', '" + amount + "')");
+            database.close();
+            
+        } catch (Exception ex) {
+            System.err.println(ex);
+        }
+    }
 }

@@ -1,6 +1,7 @@
 package projekto;
 
 import java.awt.BorderLayout;
+import java.awt.Color;
 import java.awt.FlowLayout;
 import java.awt.Font;
 import java.awt.GridBagConstraints;
@@ -43,7 +44,10 @@ public class ReservationPanel extends JPanel implements ActionListener, ItemList
     private JPanel timePanel;
     private JCheckBox selectTime;
     
-    public ReservationPanel() {
+    private MainGUI mainGUI;
+    private User user;
+    
+    public ReservationPanel(MainGUI mainGUI, User user) {
         super();
         setLayout(new BorderLayout());
         
@@ -59,6 +63,9 @@ public class ReservationPanel extends JPanel implements ActionListener, ItemList
         resultPanelScroll = new JScrollPane();
         resultPanelScroll.setVisible(false);
         add(resultPanelScroll, BorderLayout.CENTER);
+        
+        this.mainGUI = mainGUI;
+        this.user = user;
     }
     
     private JPanel searchPanel() {
@@ -167,8 +174,8 @@ public class ReservationPanel extends JPanel implements ActionListener, ItemList
         return alignSearchNorth;
     }
     
-    private JPanel resultPanel(ArrayList<String[]> performances) {
-        return new PerformancePanel(performances);
+    private JPanel resultPanel(ArrayList<String[]> performances, String date) {
+        return new PerformancePanel(performances, date, mainGUI, user);
     }
     
     private void search() {
@@ -241,16 +248,29 @@ public class ReservationPanel extends JPanel implements ActionListener, ItemList
                 performances = new DBConnect().getPerformances(selectedCinemaName, selectedCinemaCity, selectedDate);
             }
         }
-        if(performances != null) {
-            resultPanelScroll.setViewportView(resultPanel(performances));
-            
+        JPanel space = new JPanel();
+        space.setLayout(new BorderLayout());
+        space.setBorder(BorderFactory.createEmptyBorder(10, 10, 0, 10));
+
+        JLabel reserveNotice = new JLabel("Reservieren mit Doppelklick");
+        Font f = reserveNotice.getFont();
+        reserveNotice.setFont(f.deriveFont(f.getSize2D() + 10.0f));
+        reserveNotice.setBorder(BorderFactory.createLineBorder(Color.black));
+        reserveNotice.setHorizontalAlignment(JLabel.CENTER);
+        space.add(reserveNotice, BorderLayout.CENTER);
+        
+        if(performances == null || performances.isEmpty()) {
+            resultPanelScroll.setViewportView(null);
+            reserveNotice.setText("Ihre Suche lieferte keine Ergebnisse");
         }
         else {
-            resultPanelScroll.setViewportView(new JLabel("Nix gefunden"));
+            resultPanelScroll.setViewportView(resultPanel(performances, selectedDateString));
         }
+        resultPanelScroll.setColumnHeaderView(space);
         resultPanelScroll.setVisible(true);
         revalidate();
     }
+
     
     private String[] getDateSelection(int quantity) {
         String[] dates = new String[quantity];
