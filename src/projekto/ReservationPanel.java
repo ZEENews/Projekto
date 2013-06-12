@@ -212,14 +212,13 @@ public class ReservationPanel extends JPanel implements ActionListener, ItemList
         if(!t.matches("^\\s*$")) {
             selectedTitle = t;
         }
-        
+        ArrayList movieIDs = new DBConnect().getMovieIDs(selectedTitle);
         ArrayList<String[]> performances = null;
         if(selectedTime != null) {
             if(selectedTitle != null) {
                 // suche nach kino, stadt, datum, zeit, film
-                int movieID = new DBConnect().getMovieID(selectedTitle);
-                if(movieID > 0) {
-                    performances = new DBConnect().getPerformances(selectedCinemaName, selectedCinemaCity, selectedDate, selectedTime, movieID);
+                if(!movieIDs.isEmpty()) {
+                    performances = new DBConnect().getPerformances(selectedCinemaName, selectedCinemaCity, selectedDate, selectedTime, movieIDs);
                 }       
             }
             else if(selectedGenre != null) {
@@ -234,10 +233,12 @@ public class ReservationPanel extends JPanel implements ActionListener, ItemList
         else {
             if(selectedTitle != null) {
                 // suche nach kino, stadt, datum, film
-                int movieID = new DBConnect().getMovieID(selectedTitle);
-                if(movieID > 0) {
-                    performances = new DBConnect().getPerformances(selectedCinemaName, selectedCinemaCity, selectedDate, movieID);
+                ArrayList movieID = new DBConnect().getMovieIDs(selectedTitle);
+                
+                if(!movieIDs.isEmpty()) {
+                    performances = new DBConnect().getPerformances(selectedCinemaName, selectedCinemaCity, selectedDate, movieIDs);
                 }    
+                
             }
             else if(selectedGenre != null) {
                 // suche nach kino, stadt, datum, genre

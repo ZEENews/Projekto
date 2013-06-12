@@ -11,6 +11,8 @@ import java.awt.GridBagLayout;
 import java.awt.Insets;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
+import java.awt.event.WindowEvent;
+import java.awt.event.WindowListener;
 import javax.swing.BorderFactory;
 import javax.swing.JButton;
 import javax.swing.JComboBox;
@@ -18,25 +20,27 @@ import javax.swing.JFrame;
 import javax.swing.JLabel;
 import javax.swing.JPanel;
 import javax.swing.JSpinner;
+import javax.swing.JTextPane;
 import javax.swing.SpinnerNumberModel;
 
-public class ReservationScreen extends JFrame implements ActionListener {
+public class ReservationScreen extends JFrame implements ActionListener, WindowListener {
     
-    private JButton ok, cancel, ack;
+    private JButton ok, cancel;
     private JSpinner ticketCount;
+    private JLabel number;
     private MainGUI mainGUI;
     private User user;
     private int performanceID;
+    private Container cp;
     
     private JComboBox<String> ticketType;
-    private JPanel card2;
     
     public ReservationScreen(MainGUI mainGUI, String performanceID, String title, String date, String time, User user) {
         super("Reservierung");
+        addWindowListener(this);
         setResizable(false);
-        setDefaultCloseOperation(DISPOSE_ON_CLOSE);
         
-        Container cp = getContentPane();
+        cp = getContentPane();
         cp.setLayout(new CardLayout());
         
         JPanel card1 = new JPanel();
@@ -123,32 +127,107 @@ public class ReservationScreen extends JFrame implements ActionListener {
         }
         setVisible(true);
         
-        card2 = new JPanel();
+        JPanel card2 = new JPanel();
         card2.setLayout(new BorderLayout());
+        card2.setBorder(BorderFactory.createEmptyBorder(20, 10, 10, 10));
         cp.add(card2, "summary");
-      
+        
+        JLabel success = new JLabel("Reservierung erfolgreich!");
+        success.setHorizontalAlignment(JLabel.CENTER);
+        Font f2 = success.getFont();
+        success.setFont(f2.deriveFont(f2.getSize2D() + 7.0f));
+        card2.add(success, BorderLayout.NORTH);
+        
+        JPanel info = new JPanel();
+        info.setLayout(new GridBagLayout());
+        card2.add(info, BorderLayout.CENTER);
+        
+        GridBagConstraints c2 = new GridBagConstraints();
+        c2.fill = GridBagConstraints.NONE;
+        c2.gridx = 0;
+        c2.gridy = 0;
+        c2.weightx = 1;
+        c2.insets = new Insets(0, 0, 5, 0);
+        
+        JLabel numberInfo = new JLabel("Ihre Reservierungsnummer:");
+        info.add(numberInfo, c2);
+        
+        number = new JLabel();
+        f = number.getFont();
+        number.setFont(f.deriveFont(f.getSize2D() + 10.0f));
+        c2.gridy++;
+        info.add(number, c2);
+        
+        JPanel alignRight = new JPanel();
+        alignRight.setLayout(new FlowLayout(FlowLayout.RIGHT));
+        card2.add(alignRight, BorderLayout.SOUTH);
+        
+        JButton close = new JButton("Schließen");
+        close.addActionListener(this);
+        alignRight.add(close);
+        
+        JPanel card3 = errorPanel("Sie haben bereits Karten für diese Vorstellung reserviert.");
+        cp.add(card3, "errorPreviousReservation");
+        
+        JPanel card4 = errorPanel("Es sind nicht mehr genug Karten für diese Vorstellung vorhanden.");
+        cp.add(card4, "errorTicketsUnavailable");
+        
         this.mainGUI = mainGUI;
         this.user = user;
         this.performanceID = Integer.parseInt(performanceID);
     }
     
+    private JPanel errorPanel(String message) {
+        JPanel errorPanel = new JPanel();
+        errorPanel.setBorder(BorderFactory.createEmptyBorder(10, 10, 10, 10));
+        errorPanel.setLayout(new BorderLayout(0, 10));
+        
+        JLabel error = new JLabel("Fehler:");
+        Font f = error.getFont();
+        error.setFont(f.deriveFont(f.getSize2D() + 7.0f));
+        errorPanel.add(error, BorderLayout.NORTH);
+        
+        JTextPane p = new JTextPane();
+        p.setText(message);
+        p.setBorder(null);
+        p.setBackground(null);
+        p.setEditable(false);
+        p.setOpaque(false);
+        errorPanel.add(p, BorderLayout.CENTER);
+        
+        JPanel alignRight = new JPanel();
+        alignRight.setLayout(new FlowLayout(FlowLayout.RIGHT));
+        errorPanel.add(alignRight, BorderLayout.SOUTH);
+        
+        JButton close = new JButton("Schließen");
+        close.addActionListener(this);
+        alignRight.add(close);
+        
+        return errorPanel;
+    }
+    
     public void reserve(int amount, String type) {
         DBConnect db = new DBConnect();
+        CardLayout layout = (CardLayout) cp.getLayout();
         if(!db.previousReservation(user.getID(), performanceID)) {
             int available = db.getAvailableTickets(performanceID, type);
             System.out.println(available);
             if(available >= amount) {
-                db.reserveTickets(performanceID, user.getID(), type, amount);
+                int reservationNumber = db.reserveTickets(performanceID, user.getID(), type, amount);
+                number.setText("" + reservationNumber);
                 //Ausgabe erfolgreiche reservierung und so
+                layout.show(cp, "summary");
+                mainGUI.updateReservationHistory();
             }
             else {
                 //nichts mehr frei
+                layout.show(cp, "errorTicketsUnavailable");
             }
         }
         else {
             //bereits karten reserviert
+            layout.show(cp, "errorPreviousReservation");
         }
-        mainGUI.updateReservationHistory();
     }
     
     public void close() {
@@ -163,10 +242,35 @@ public class ReservationScreen extends JFrame implements ActionListener {
             int amount = Integer.parseInt(ticketCount.getValue().toString());
             String type = ticketType.getSelectedItem().toString();
             reserve(amount, type);
-            System.out.println(amount + "x " + type);
         }
         else if(ae.getSource().equals(cancel)) {
             close();
         }
+        else {
+            close();
+        }
     }
+
+    @Override
+    public void windowOpened(WindowEvent we) {}
+
+    @Override
+    public void windowClosing(WindowEvent we) {
+        close();
+    }
+
+    @Override
+    public void windowClosed(WindowEvent we) {}
+
+    @Override
+    public void windowIconified(WindowEvent we) {}
+
+    @Override
+    public void windowDeiconified(WindowEvent we) {}
+
+    @Override
+    public void windowActivated(WindowEvent we) {}
+
+    @Override
+    public void windowDeactivated(WindowEvent we) {}
 }

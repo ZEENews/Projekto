@@ -554,25 +554,27 @@ public class DBConnect {
         }
     }
     
-    public int getMovieID(String title) {
+    public ArrayList getMovieIDs(String title) {
         Connection database;
  
-        int result = -1;
+        ArrayList<Integer> list = new ArrayList();
+        //int result = -1;
         
         try {
             Class.forName("org.postgresql.Driver").newInstance();
             database = DriverManager.getConnection("jdbc:postgresql://localhost:5432/dbprojekt", "projekt", "geheim"); 
             Statement an = database.createStatement();
             
-            ResultSet rs = an.executeQuery("SELECT \"Filmid\" FROM \"Film\" WHERE \"Filmname\"='" + title + "' LIMIT 1");
+            ResultSet rs = an.executeQuery("SELECT \"Filmid\" FROM \"Film\" WHERE LOWER(\"Filmname\") like LOWER('%" + title + "%')");
             while( rs.next()){
-                result = rs.getInt("Filmid");
+                list.add(rs.getInt("Filmid"));
             }
+            
         } catch (Exception ex) {
             System.out.println("Keine Datenbankverbindung möglich: "
                     + ex.getMessage());
         }
-        return result;
+        return list;
     }
     
     public ArrayList<String[]> getPerformances(String cinema, String city, Date date) {
@@ -711,7 +713,7 @@ public class DBConnect {
         return list;
     }
     
-    public ArrayList<String[]> getPerformances(String cinema, String city, Date date, Time time, int movieID) {
+    public ArrayList<String[]> getPerformances(String cinema, String city, Date date, Time time, ArrayList movieIDs) {
         Connection database;
         
         ArrayList<String[]> list = new ArrayList();
@@ -722,9 +724,14 @@ public class DBConnect {
               + "WHERE \"Kinoname\"='" + cinema + "' AND"
               + "\"Stadt\"='" + city + "' AND"
               + "\"Datum\"='" + date + "' AND"
-              + "\"Uhrzeit\">='" + time + "' AND"
-              + "\"Filmid\"='" + movieID + "'"
-              + "ORDER BY \"Filmname\", \"Uhrzeit\"";
+              + "\"Uhrzeit\">='" + time + "' AND";
+              for(int i = 0; i < movieIDs.size(); i++) {
+                  statement += "\"Filmid\"='" + movieIDs.get(i) + "'";
+                  if(i != movieIDs.size() -1) {
+                      statement +="OR";
+                  }
+              }
+              statement += "ORDER BY \"Filmname\", \"Uhrzeit\"";
         
         try {
             Class.forName("org.postgresql.Driver").newInstance();
@@ -757,9 +764,9 @@ public class DBConnect {
         return list;
     }
     
-    public ArrayList<String[]> getPerformances(String cinema, String city, Date date, int movieID) {
+    public ArrayList<String[]> getPerformances(String cinema, String city, Date date, ArrayList movieIDs) {
         Connection database;
-        
+        System.out.println(movieIDs.size());
         ArrayList<String[]> list = new ArrayList();
         
         String statement = 
@@ -767,9 +774,15 @@ public class DBConnect {
               + "FROM \"Vorstellungjoin\""
               + "WHERE \"Kinoname\"='" + cinema + "' AND"
               + "\"Stadt\"='" + city + "' AND"
-              + "\"Datum\"='" + date + "' AND"
-              + "\"Filmid\"='" + movieID + "'"
-              + "ORDER BY \"Filmname\", \"Uhrzeit\"";
+              + "\"Datum\"='" + date + "' AND";
+                for(int i = 0; i < movieIDs.size(); i++) {
+                  statement += "\"Filmid\"='" + movieIDs.get(i) + "'";
+                  if(i != movieIDs.size() -1) {
+                      statement +="OR";
+                  }
+              }
+              System.out.println(statement);
+              statement += "ORDER BY \"Filmname\", \"Uhrzeit\"";
         
         try {
             Class.forName("org.postgresql.Driver").newInstance();
@@ -932,7 +945,7 @@ public class DBConnect {
         return result;
     }
     
-    public void reserveTickets(int performanceID, int userID, String category, int amount) {
+    public int reserveTickets(int performanceID, int userID, String category, int amount) {
         Connection database;
 
         try {
@@ -940,12 +953,61 @@ public class DBConnect {
             database = DriverManager.getConnection("jdbc:postgresql://localhost:5432/dbprojekt", "projekt", "geheim"); 
 
             Statement an = database.createStatement();
-            an.executeUpdate("INSERT INTO \"Reservierung\" (\"Vorstellungid\", \"Benutzerid\", \"Kategorie\", \"TicketAnzahl\")" + 
-                             "VALUES ('" + performanceID + "', '" + userID + "', '" + category + "', '" + amount + "')");
+            ResultSet rs = an.executeQuery("INSERT INTO \"Reservierung\" (\"Vorstellungid\", \"Benutzerid\", \"Kategorie\", \"TicketAnzahl\")" + 
+                             "VALUES ('" + performanceID + "', '" + userID + "', '" + category + "', '" + amount + "')" +
+                             "RETURNING (SELECT last_value FROM \"Reservierung_Reservierungid_seq\")");
+            if(rs.next()) {
+                return rs.getInt(1);
+            }
             database.close();
             
         } catch (Exception ex) {
             System.err.println(ex);
         }
+        return -1;
+    }
+    
+    public ArrayList<String[]> getUserReservations(int userID) {
+        Connection database;
+        
+        ArrayList<String[]> list = new ArrayList();
+        
+        String statement = 
+                "SELECT \"Reservierungid\", \"Kategorie\", \"TicketAnzahl\", \"Filmname\", \"Datum\", \"Uhrzeit\", \"Kinoname\", \"Stadt\", \"SaalNr\""
+              + "FROM \"Reservierung\" LEFT JOIN"
+              + "\"Vorstellungjoin\" ON \"Reservierung\".\"Vorstellungid\"=\"Vorstellungjoin\".\"Vorstellungid\""
+              + "WHERE \"Benutzerid\"=" + userID + " "
+              + "ORDER BY \"Reservierungid\", \"Datum\", \"Uhrzeit\"";
+        
+        try {
+            Class.forName("org.postgresql.Driver").newInstance();
+            database = DriverManager.getConnection("jdbc:postgresql://localhost:5432/dbprojekt", "projekt", "geheim"); 
+            Statement an = database.createStatement();
+            
+            ResultSet rs = an.executeQuery(statement);
+            while(rs.next()) {
+                
+                String[] performance = new String[7];
+                performance[0] = "" + rs.getInt("Reservierungid");
+                performance[1] = rs.getInt("TicketAnzahl") + "x " + rs.getString("Kategorie");
+                performance[2] = "" + rs.getString("Filmname");
+                SimpleDateFormat df = new SimpleDateFormat("dd.MM.yyyy");
+                performance[3] = df.format(rs.getDate("Datum"));
+                SimpleDateFormat tf = new SimpleDateFormat("HH:mm");
+                performance[4] = tf.format(rs.getTime("Uhrzeit"));
+                performance[5] = rs.getString("Kinoname") + " (" + rs.getString("Stadt") + ")";
+                performance[6] = "" + rs.getInt("SaalNr");
+                
+                list.add(performance);
+            }
+                
+            rs.close();
+            database.close();  
+            
+        } catch (Exception ex) {
+            System.out.println("Keine Datenbankverbindung möglich: "
+                    + ex);
+        }
+        return list;
     }
 }
