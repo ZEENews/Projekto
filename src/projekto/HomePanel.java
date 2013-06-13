@@ -1,6 +1,7 @@
 package projekto;
 
 import java.awt.BorderLayout;
+import java.awt.Color;
 import java.awt.Font;
 import java.awt.Image;
 import java.awt.event.ActionEvent;
@@ -30,19 +31,23 @@ public class HomePanel extends JPanel {
     public HomePanel() {
         super();
         setLayout(new BorderLayout());
+        setOpaque(true);
+        setBackground(new Color(33,49,198));
 
         JLabel welcome = new JLabel("Herzlich Willkommen bei Projekto!");
+        welcome.setForeground(Color.white);
         welcome.setBorder(BorderFactory.createEmptyBorder(40, 20, 20, 20));
         Font f = welcome.getFont();
         welcome.setFont(f.deriveFont(f.getSize() + 10.0f));
         welcome.setHorizontalAlignment(JLabel.CENTER);
         add(welcome, BorderLayout.NORTH);
+        
         add(gallery, BorderLayout.CENTER);
         gallery.setHorizontalAlignment(SwingConstants.CENTER);
         bildSetzen();
         
         Timer t;
-        t = new Timer(10000, new ActionListener() {
+        t = new Timer(5000, new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e) {
                 bildSetzen();

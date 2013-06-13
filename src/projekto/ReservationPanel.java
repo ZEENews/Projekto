@@ -107,7 +107,7 @@ public class ReservationPanel extends JPanel implements ActionListener, ItemList
         c.gridx = 1;
         searchPanel.add(cinema, c);
         
-        JLabel dateText = new JLabel("Tag:");
+        JLabel dateText = new JLabel("Tag:");      
         c.gridx = 0;
         c.gridy++;
         searchPanel.add(dateText, c);
