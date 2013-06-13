@@ -11,7 +11,7 @@ import javax.swing.JScrollPane;
 
 /**
  *
- * @author julia
+ * @author Julia Krause
  */
 public class OldReservationPanel extends JPanel {
     

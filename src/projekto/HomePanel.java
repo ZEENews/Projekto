@@ -19,44 +19,40 @@ import javax.swing.text.StyledDocument;
 
 /**
  *
- * @author julia
+ * @author Julia Krause, Tobias Gneuß
  */
 public class HomePanel extends JPanel {
-    
+
+    private String[] bildernamen = {"afterearth", "croods", "darkness", "epic", "gatsby", "tw", "thehangover3"};
+    private int picNumber = 0;
+    private JLabel gallery = new JLabel();
+
     public HomePanel() {
         super();
         setLayout(new BorderLayout());
-        
+
         JLabel welcome = new JLabel("Herzlich Willkommen bei Projekto!");
         welcome.setBorder(BorderFactory.createEmptyBorder(40, 20, 20, 20));
         Font f = welcome.getFont();
         welcome.setFont(f.deriveFont(f.getSize() + 10.0f));
         welcome.setHorizontalAlignment(JLabel.CENTER);
         add(welcome, BorderLayout.NORTH);
-        
-        JLabel gallery = new JLabel();
-        gallery.setHorizontalAlignment(SwingConstants.CENTER);
         add(gallery, BorderLayout.CENTER);
+        gallery.setHorizontalAlignment(SwingConstants.CENTER);
+        bildSetzen();
         
-//        int n = 0;
-//        Timer t;
-//        
-//        t = new Timer(2000, new ActionListener() {
-//            @Override
-//            public void actionPerformed(ActionEvent e) {
-//               
-//            }
-//        });
-//        t.start();
-        
-        
-        
-        ImageIcon imageIcon = new javax.swing.ImageIcon(getClass().getResource("/pics/hangover3.jpg"));
-        Image image = imageIcon.getImage();
-        image = image.getScaledInstance(600, 400, Image.SCALE_SMOOTH);
-        imageIcon = new ImageIcon(image);
-        gallery.setIcon(imageIcon);
-        
+        Timer t;
+        t = new Timer(10000, new ActionListener() {
+            @Override
+            public void actionPerformed(ActionEvent e) {
+                bildSetzen();
+            }
+        });
+        t.start();
+
+
+
+
 //        JScrollPane scrollPane = new JScrollPane();
 //        add(scrollPane, BorderLayout.CENTER);
 //        
@@ -74,5 +70,19 @@ public class HomePanel extends JPanel {
 //        SimpleAttributeSet center = new SimpleAttributeSet();
 //        StyleConstants.setAlignment(center, StyleConstants.ALIGN_CENTER);
 //        doc.setParagraphAttributes(0, doc.getLength(), center, false);
+    }
+
+    private void bildSetzen() {
+        ImageIcon imageIcon = new javax.swing.ImageIcon(getClass().
+                getResource("/pics/" + bildernamen[picNumber] + ".jpg"));
+        Image image = imageIcon.getImage();
+        image = image.getScaledInstance(600, 400, Image.SCALE_SMOOTH);
+        imageIcon = new ImageIcon(image);
+
+        gallery.setIcon(imageIcon);
+        picNumber++;
+        if (picNumber == bildernamen.length) {
+            picNumber = 0;
+        }
     }
 }

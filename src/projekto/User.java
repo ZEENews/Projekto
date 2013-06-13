@@ -9,7 +9,7 @@ import java.text.SimpleDateFormat;
 
 /**
  *
- * @author julia
+ * @author Tobias Gneuß
  */
 public class User {
     

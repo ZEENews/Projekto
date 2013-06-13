@@ -14,7 +14,7 @@ import javax.swing.JTextField;
 
 /**
  *
- * @author julia
+ * @author Tobias Gneuß
  */
 public class UserInputPanel extends JPanel {
     

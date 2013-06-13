@@ -32,7 +32,7 @@ import javax.swing.SpinnerNumberModel;
 
 /**
  *
- * @author julia
+ * @author Julia Krause
  */
 public class ReservationPanel extends JPanel implements ActionListener, ItemListener {
     

@@ -22,8 +22,9 @@ import javax.swing.table.JTableHeader;
 
 /**
  *
- * @author julia
+ * @author Julia Krause
  */
+
 public class MovieCard extends JPanel implements MouseListener {
     
     private String title;

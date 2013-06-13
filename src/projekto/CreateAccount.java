@@ -11,6 +11,10 @@ import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import javax.swing.*;
 
+/**
+ *
+ * @author  Tobias Gneuß
+ */
 
 public class CreateAccount extends JFrame implements ActionListener {
 

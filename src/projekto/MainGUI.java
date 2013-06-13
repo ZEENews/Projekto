@@ -6,8 +6,9 @@ import javax.swing.JTabbedPane;
 
 /**
  *
- * @author julia
+ * @author Julia Krause, Tobias Gneuß
  */
+
 public class MainGUI extends JFrame {
     
     ReservationHistoryPanel reservationHistory;

@@ -19,7 +19,7 @@ import javax.swing.table.JTableHeader;
 
 /**
  *
- * @author julia
+ * @author Julia Krause
  */
 public class ReservationHistoryPanel extends JPanel {
     

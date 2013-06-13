@@ -17,6 +17,11 @@ import javax.swing.JPanel;
 import javax.swing.JPasswordField;
 import javax.swing.JScrollPane;
 
+/**
+ *
+ * @author Tobias Gneuß
+ */
+
 public class UserInformationPanel extends JPanel implements ActionListener {
     
     private JButton save, cancel, editData, modifyPassword, deleteAccount;

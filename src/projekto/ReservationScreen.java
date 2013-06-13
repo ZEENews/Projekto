@@ -23,6 +23,11 @@ import javax.swing.JSpinner;
 import javax.swing.JTextPane;
 import javax.swing.SpinnerNumberModel;
 
+/**
+ *
+ * @author Julia Krause
+ */
+
 public class ReservationScreen extends JFrame implements ActionListener, WindowListener {
     
     private JButton ok, cancel;

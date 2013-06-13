@@ -10,7 +10,7 @@ import javax.swing.JPanel;
 
 /**
  *
- * @author julia
+ * @author Julia Krause, Tobias Gneuß
  */
 public class PerformancePanel extends JPanel {
     
