@@ -33,7 +33,7 @@ public class ReservationScreen extends JFrame implements ActionListener, WindowL
     private int performanceID;
     private Container cp;
     
-    private JComboBox<String> ticketType;
+    private JComboBox ticketType;
     
     public ReservationScreen(MainGUI mainGUI, String performanceID, String title, String date, String time, User user) {
         super("Reservierung");
@@ -102,7 +102,7 @@ public class ReservationScreen extends JFrame implements ActionListener, WindowL
         content.add(typeLabel, c);
         
         String[] ticketTypes = {"Parkett", "Loge"};
-        ticketType = new JComboBox<String>(ticketTypes);
+        ticketType = new JComboBox(ticketTypes);
         c.gridx++;
         c.insets = new Insets(0, 0, 0, 0);
         content.add(ticketType, c);

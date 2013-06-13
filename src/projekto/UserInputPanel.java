@@ -170,7 +170,7 @@ public class UserInputPanel extends JPanel {
         c.gridy++;
         add(birthdateText, c);
 
-        SimpleDateFormat format = new SimpleDateFormat("dd.MM.YYYY");
+        SimpleDateFormat format = new SimpleDateFormat("dd.MM.yyyy");
         birthdate = new JTextField(format.format(u.getBirthdate()), 15);
         c.gridx++;
         add(birthdate, c);
@@ -249,7 +249,7 @@ public class UserInputPanel extends JPanel {
                 lastname.setText(user.getLastname());
                 forename.setText(user.getForename());
                 email.setText(user.getEmail());
-                SimpleDateFormat format = new SimpleDateFormat("dd.MM.YYYY");
+                SimpleDateFormat format = new SimpleDateFormat("dd.MM.yyyy");
                 birthdate.setText(format.format(user.getBirthdate()));
                 street.setText(user.getStreet());
                 housenr.setText(user.getHousenumber());

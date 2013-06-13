@@ -38,7 +38,7 @@ public class ReservationPanel extends JPanel implements ActionListener, ItemList
     
     private JButton search;
     private JScrollPane resultPanelScroll;
-    private JComboBox<String> cinema, date, genre;
+    private JComboBox cinema, date, genre;
     private JSpinner hour, minute;
     private JTextField title;
     private JPanel timePanel;
@@ -103,7 +103,7 @@ public class ReservationPanel extends JPanel implements ActionListener, ItemList
         ArrayList<String> cinemaList = db.getCinemas();
         String[] cinemaArray = cinemaList.toArray(new String[cinemaList.size()]);
         
-        cinema = new JComboBox<String>(cinemaArray);
+        cinema = new JComboBox(cinemaArray);
         c.gridx = 1;
         searchPanel.add(cinema, c);
         
@@ -113,7 +113,7 @@ public class ReservationPanel extends JPanel implements ActionListener, ItemList
         searchPanel.add(dateText, c);
         
         String[] days = getDateSelection(14);
-        date = new JComboBox<String>(days);
+        date = new JComboBox(days);
         c.gridx = 1;
         searchPanel.add(date, c);
         
@@ -151,7 +151,7 @@ public class ReservationPanel extends JPanel implements ActionListener, ItemList
         searchPanel.add(genreText, c);
         
         String[] genres = {"", "Action", "Animation", "Fantasy", "Horror", "Komödie", "Science-Fiction", "Thriller"};
-        genre = new JComboBox<String>(genres);
+        genre = new JComboBox(genres);
         c.gridx = 1;
         searchPanel.add(genre, c);
         
